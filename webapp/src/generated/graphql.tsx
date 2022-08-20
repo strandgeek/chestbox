@@ -13,6 +13,7 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  JSON: any;
 };
 
 export type Account = {
@@ -77,11 +78,38 @@ export type GenerateNoncePayload = {
   nonce: Scalars['String'];
 };
 
+export type ImageUploadInput = {
+  imageBase64: Scalars['String'];
+};
+
+export type ImageUploadPayload = {
+  __typename?: 'ImageUploadPayload';
+  url: Scalars['String'];
+};
+
+export type JsonFilter = {
+  array_contains?: InputMaybe<Scalars['JSON']>;
+  array_ends_with?: InputMaybe<Scalars['JSON']>;
+  array_starts_with?: InputMaybe<Scalars['JSON']>;
+  equals?: InputMaybe<Scalars['JSON']>;
+  gt?: InputMaybe<Scalars['JSON']>;
+  gte?: InputMaybe<Scalars['JSON']>;
+  lt?: InputMaybe<Scalars['JSON']>;
+  lte?: InputMaybe<Scalars['JSON']>;
+  not?: InputMaybe<Scalars['JSON']>;
+  path?: InputMaybe<Array<Scalars['String']>>;
+  string_contains?: InputMaybe<Scalars['String']>;
+  string_ends_with?: InputMaybe<Scalars['String']>;
+  string_starts_with?: InputMaybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auth: AuthPayload;
   createProject: Project;
+  createProjectAsset: ProjectAsset;
   generateNonce: GenerateNoncePayload;
+  uploadImage: ImageUploadPayload;
 };
 
 
@@ -95,8 +123,18 @@ export type MutationCreateProjectArgs = {
 };
 
 
+export type MutationCreateProjectAssetArgs = {
+  input: ProjectAssetCreateInput;
+};
+
+
 export type MutationGenerateNonceArgs = {
   input: GenerateNonceInput;
+};
+
+
+export type MutationUploadImageArgs = {
+  input: ImageUploadInput;
 };
 
 export type NestedStringFilter = {
@@ -115,9 +153,59 @@ export type NestedStringFilter = {
 
 export type Project = {
   __typename?: 'Project';
+  _count?: Maybe<ProjectCount>;
   id: Scalars['String'];
   name: Scalars['String'];
   ownerId: Scalars['String'];
+};
+
+export type ProjectAsset = {
+  __typename?: 'ProjectAsset';
+  description: Scalars['String'];
+  id: Scalars['String'];
+  imageUrl: Scalars['String'];
+  name: Scalars['String'];
+  projectId: Scalars['String'];
+  properties: Scalars['JSON'];
+  slug: Scalars['String'];
+};
+
+export type ProjectAssetCreateInput = {
+  description: Scalars['String'];
+  imageUrl: Scalars['String'];
+  name: Scalars['String'];
+  projectId: Scalars['String'];
+  properties: Scalars['String'];
+  slug: Scalars['String'];
+};
+
+export type ProjectAssetListRelationFilter = {
+  every?: InputMaybe<ProjectAssetWhereInput>;
+  none?: InputMaybe<ProjectAssetWhereInput>;
+  some?: InputMaybe<ProjectAssetWhereInput>;
+};
+
+export type ProjectAssetOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type ProjectAssetWhereInput = {
+  AND?: InputMaybe<Array<ProjectAssetWhereInput>>;
+  NOT?: InputMaybe<Array<ProjectAssetWhereInput>>;
+  OR?: InputMaybe<Array<ProjectAssetWhereInput>>;
+  description?: InputMaybe<StringFilter>;
+  id?: InputMaybe<StringFilter>;
+  imageUrl?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  project?: InputMaybe<ProjectRelationFilter>;
+  projectId?: InputMaybe<StringFilter>;
+  properties?: InputMaybe<JsonFilter>;
+  slug?: InputMaybe<StringFilter>;
+};
+
+export type ProjectCount = {
+  __typename?: 'ProjectCount';
+  assets: Scalars['Int'];
 };
 
 export type ProjectCreateInput = {
@@ -135,10 +223,16 @@ export type ProjectOrderByRelationAggregateInput = {
 };
 
 export type ProjectOrderByWithRelationInput = {
+  assets?: InputMaybe<ProjectAssetOrderByRelationAggregateInput>;
   id?: InputMaybe<SortOrder>;
   name?: InputMaybe<SortOrder>;
   owner?: InputMaybe<AccountOrderByWithRelationInput>;
   ownerId?: InputMaybe<SortOrder>;
+};
+
+export type ProjectRelationFilter = {
+  is?: InputMaybe<ProjectWhereInput>;
+  isNot?: InputMaybe<ProjectWhereInput>;
 };
 
 export enum ProjectScalarFieldEnum {
@@ -151,6 +245,7 @@ export type ProjectWhereInput = {
   AND?: InputMaybe<Array<ProjectWhereInput>>;
   NOT?: InputMaybe<Array<ProjectWhereInput>>;
   OR?: InputMaybe<Array<ProjectWhereInput>>;
+  assets?: InputMaybe<ProjectAssetListRelationFilter>;
   id?: InputMaybe<StringFilter>;
   name?: InputMaybe<StringFilter>;
   owner?: InputMaybe<AccountRelationFilter>;
@@ -205,12 +300,26 @@ export type CreateProjectMutationVariables = Exact<{
 
 export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string, name: string } };
 
+export type CreateProjectAssetMutationVariables = Exact<{
+  input: ProjectAssetCreateInput;
+}>;
+
+
+export type CreateProjectAssetMutation = { __typename?: 'Mutation', createProjectAsset: { __typename?: 'ProjectAsset', id: string, name: string, imageUrl: string } };
+
 export type GenerateNonceMutationVariables = Exact<{
   input: GenerateNonceInput;
 }>;
 
 
 export type GenerateNonceMutation = { __typename?: 'Mutation', generateNonce: { __typename?: 'GenerateNoncePayload', nonce: string } };
+
+export type UploadImageMutationVariables = Exact<{
+  input: ImageUploadInput;
+}>;
+
+
+export type UploadImageMutation = { __typename?: 'Mutation', uploadImage: { __typename?: 'ImageUploadPayload', url: string } };
 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
@@ -285,6 +394,41 @@ export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOption
 export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
 export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
 export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
+export const CreateProjectAssetDocument = gql`
+    mutation CreateProjectAsset($input: ProjectAssetCreateInput!) {
+  createProjectAsset(input: $input) {
+    id
+    name
+    imageUrl
+  }
+}
+    `;
+export type CreateProjectAssetMutationFn = Apollo.MutationFunction<CreateProjectAssetMutation, CreateProjectAssetMutationVariables>;
+
+/**
+ * __useCreateProjectAssetMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectAssetMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectAssetMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectAssetMutation, { data, loading, error }] = useCreateProjectAssetMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateProjectAssetMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectAssetMutation, CreateProjectAssetMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectAssetMutation, CreateProjectAssetMutationVariables>(CreateProjectAssetDocument, options);
+      }
+export type CreateProjectAssetMutationHookResult = ReturnType<typeof useCreateProjectAssetMutation>;
+export type CreateProjectAssetMutationResult = Apollo.MutationResult<CreateProjectAssetMutation>;
+export type CreateProjectAssetMutationOptions = Apollo.BaseMutationOptions<CreateProjectAssetMutation, CreateProjectAssetMutationVariables>;
 export const GenerateNonceDocument = gql`
     mutation GenerateNonce($input: GenerateNonceInput!) {
   generateNonce(input: $input) {
@@ -318,6 +462,39 @@ export function useGenerateNonceMutation(baseOptions?: Apollo.MutationHookOption
 export type GenerateNonceMutationHookResult = ReturnType<typeof useGenerateNonceMutation>;
 export type GenerateNonceMutationResult = Apollo.MutationResult<GenerateNonceMutation>;
 export type GenerateNonceMutationOptions = Apollo.BaseMutationOptions<GenerateNonceMutation, GenerateNonceMutationVariables>;
+export const UploadImageDocument = gql`
+    mutation UploadImage($input: ImageUploadInput!) {
+  uploadImage(input: $input) {
+    url
+  }
+}
+    `;
+export type UploadImageMutationFn = Apollo.MutationFunction<UploadImageMutation, UploadImageMutationVariables>;
+
+/**
+ * __useUploadImageMutation__
+ *
+ * To run a mutation, you first call `useUploadImageMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUploadImageMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [uploadImageMutation, { data, loading, error }] = useUploadImageMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useUploadImageMutation(baseOptions?: Apollo.MutationHookOptions<UploadImageMutation, UploadImageMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<UploadImageMutation, UploadImageMutationVariables>(UploadImageDocument, options);
+      }
+export type UploadImageMutationHookResult = ReturnType<typeof useUploadImageMutation>;
+export type UploadImageMutationResult = Apollo.MutationResult<UploadImageMutation>;
+export type UploadImageMutationOptions = Apollo.BaseMutationOptions<UploadImageMutation, UploadImageMutationVariables>;
 export const MeDocument = gql`
     query Me {
   me {

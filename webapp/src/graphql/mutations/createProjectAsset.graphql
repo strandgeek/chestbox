@@ -1,0 +1,7 @@
+mutation CreateProjectAsset($input: ProjectAssetCreateInput!) {
+  createProjectAsset(input: $input) {
+    id
+    name
+    imageUrl
+  }
+}

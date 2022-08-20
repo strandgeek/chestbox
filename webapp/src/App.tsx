@@ -16,7 +16,7 @@ function App() {
         <Route path="/app/projects" element={<ProjectsPage />} />
         <Route path="/app/projects/:projectId" element={<ProjectViewPage />} />
         <Route path="/app/projects/create" element={<CreateProjectPage />} />
-        <Route path="/app/projects/assets/create" element={<CreateAssetPage />} />
+        <Route path="/app/projects/:projectId/assets/create" element={<CreateAssetPage />} />
       </Routes>
     </BrowserRouter>
     </ApolloProvider>
