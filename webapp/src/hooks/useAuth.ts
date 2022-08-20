@@ -1,6 +1,8 @@
 import algosdk from "algosdk";
+import { useAuthMutation, useGenerateNonceMutation } from "../generated/graphql";
+import { Buffer } from 'buffer'
 // import { useNavigate } from "react-router-dom"
-// import { client } from "../client";
+
 
 const TESTNET_GENESIS_ID = 'testnet-v1.0';
 const TESTNET_GENESIS_HASH = 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=';
@@ -8,15 +10,21 @@ const TESTNET_GENESIS_HASH = 'SGO1GKSzyE7IEPItTxCByw9x8FmnrCDexi9/cOUJOiI=';
 type AuthFn = (address: string) => void
 
 export const useAuth =  (): AuthFn => {
+  const [generateNonceMutate] = useGenerateNonceMutation()
+  const [authMutate] = useAuthMutation()
   // const navigate = useNavigate()
   const auth = async (address: string) => {
     if (typeof window.AlgoSigner !== 'undefined') {
       const { AlgoSigner } = window
       const enc = new TextEncoder();
-      // const { data: { nonce } } = await client.post('/auth/nonce', {
-      //   address,
-      // })
-      const nonce = '123'
+      const res = await generateNonceMutate({
+        variables: {
+          input: {
+            address,
+          }
+        }
+      })
+      const { nonce } = res.data?.generateNonce!
       const note = enc.encode(`Authentication. Nonce: ${nonce}`);
       const txn = algosdk.makePaymentTxnWithSuggestedParamsFromObject({
         from: address,
@@ -38,14 +46,15 @@ export const useAuth =  (): AuthFn => {
           txn: txnToSign,
         },
       ]);
-      const authData = {
-        signed_tx_base64: signResponse[0].blob,
-        pub_key: address,
-      }
-      console.log(authData)
-      // const { data: { token } } = await client.post('/auth/complete', authData)
-      // localStorage.setItem('token', token)
-      // navigate('/app')
+      const authRes = await authMutate({
+        variables: {
+          input: {
+            pubKey: address,
+            signedTxBase64: signResponse[0].blob,
+          }
+        }
+      })
+      localStorage.setItem('token', authRes.data?.auth.token!)
     } else {
       alert('AlgoSigner is not installed')
     };
