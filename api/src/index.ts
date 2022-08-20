@@ -9,6 +9,7 @@ import { apiRouter } from './routes/api';
 import { buildSchema } from "type-graphql";
 import { db } from "../db";
 import { AuthResolver } from "../graphql/resolvers/Auth";
+import { AccountRelationsResolver } from '@generated/type-graphql'
 
 
 dotenv.config();
@@ -17,6 +18,7 @@ export const bootstrap = async () => {
   // GraphQL Setup
   const schema = await buildSchema({
     resolvers: [
+      AccountRelationsResolver,
       AuthResolver,
     ],
     validate: false,

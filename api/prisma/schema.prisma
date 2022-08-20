@@ -3,7 +3,7 @@ generator client {
 }
 
 generator typegraphql {
-  provider = "typegraphql-prisma"
+  provider      = "typegraphql-prisma"
   binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
@@ -13,6 +13,13 @@ datasource db {
 }
 
 model Account {
-  id      String @id @default(uuid())
-  address String @unique
+  id      String    @id @default(uuid())
+  address String    @unique
+  projects Project[]
+}
+
+model Project {
+  id      String  @id @default(uuid())
+  ownerId String
+  owner   Account @relation(fields: [ownerId], references: [id])
 }
