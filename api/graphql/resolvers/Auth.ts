@@ -6,6 +6,7 @@ import { randomUUID,  } from "crypto";
 import algosdk, { decodeSignedTransaction, SignedTransaction } from "algosdk";
 import nacl from "tweetnacl";
 import { sign, decode, verify, JwtPayload } from 'jsonwebtoken'
+import { getMeFromReq } from "../../src/utils/getMeFromReq";
 
 
 const verifySignedTransaction = (stxn: SignedTransaction): boolean => {
@@ -58,26 +59,7 @@ export class AuthPayload {
 export class AuthResolver {
   @Query(() => Account, { nullable: true })
   async me(@Ctx() { req, prisma }: Context): Promise<Account | null> {
-    const bearer = req.headers.authorization?.split(' ')
-    if (bearer?.length !== 2) {
-      return null
-    }
-    const token = bearer[1]
-    const payload = verify(token, process.env.JWT_SECRET!) as JwtPayload
-    if (!payload || !payload.address) {
-      return null
-    }
-    const { address } = payload
-    const acc = await prisma.account.upsert({
-      create: {
-        address,
-      },
-      update: {},
-      where: {
-        address,
-      }
-    })
-    return acc
+    return getMeFromReq(req)
   }
 
   @Mutation(() => GenerateNoncePayload)

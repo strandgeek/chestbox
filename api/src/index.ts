@@ -10,6 +10,8 @@ import { buildSchema } from "type-graphql";
 import { db } from "../db";
 import { AuthResolver } from "../graphql/resolvers/Auth";
 import { AccountRelationsResolver } from '@generated/type-graphql'
+import { authChecker } from "./authChecker";
+import { ProjectResolver } from "../graphql/resolvers/Project";
 
 
 dotenv.config();
@@ -20,8 +22,10 @@ export const bootstrap = async () => {
     resolvers: [
       AccountRelationsResolver,
       AuthResolver,
+      ProjectResolver,
     ],
     validate: false,
+    authChecker,
   });
   const server = new ApolloServer({
     schema,

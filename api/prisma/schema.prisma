@@ -13,13 +13,14 @@ datasource db {
 }
 
 model Account {
-  id      String    @id @default(uuid())
-  address String    @unique
+  id       String    @id @default(uuid())
+  address  String    @unique
   projects Project[]
 }
 
 model Project {
   id      String  @id @default(uuid())
+  name    String
   ownerId String
   owner   Account @relation(fields: [ownerId], references: [id])
 }
