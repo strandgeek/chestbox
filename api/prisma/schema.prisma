@@ -19,8 +19,20 @@ model Account {
 }
 
 model Project {
-  id      String  @id @default(uuid())
+  id      String         @id @default(uuid())
   name    String
   ownerId String
-  owner   Account @relation(fields: [ownerId], references: [id])
+  owner   Account        @relation(fields: [ownerId], references: [id])
+  assets  ProjectAsset[]
+}
+
+model ProjectAsset {
+  id          String  @id @default(uuid())
+  name        String
+  slug        String
+  imageUrl    String
+  description String
+  properties  Json
+  projectId   String
+  project     Project @relation(fields: [projectId], references: [id])
 }

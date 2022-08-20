@@ -27,6 +27,7 @@
     "@prisma/client": "^4.2.1",
     "algosdk": "^1.19.0",
     "apollo-server-express": "^3.10.1",
+    "aws-sdk": "^2.1199.0",
     "class-validator": "^0.13.2",
     "colors": "^1.4.0",
     "cors": "^2.8.5",

@@ -9,9 +9,11 @@ import { apiRouter } from './routes/api';
 import { buildSchema } from "type-graphql";
 import { db } from "../db";
 import { AuthResolver } from "../graphql/resolvers/Auth";
-import { AccountRelationsResolver } from '@generated/type-graphql'
+import { AccountRelationsResolver, ProjectRelationsResolver } from '@generated/type-graphql'
 import { authChecker } from "./authChecker";
 import { ProjectResolver } from "../graphql/resolvers/Project";
+import { ImageResolver } from "../graphql/resolvers/Image";
+import { ProjectAssetResolver } from "../graphql/resolvers/ProjectAsset";
 
 
 dotenv.config();
@@ -23,6 +25,9 @@ export const bootstrap = async () => {
       AccountRelationsResolver,
       AuthResolver,
       ProjectResolver,
+      ImageResolver,
+      ProjectAssetResolver,
+      ProjectRelationsResolver,
     ],
     validate: false,
     authChecker,
