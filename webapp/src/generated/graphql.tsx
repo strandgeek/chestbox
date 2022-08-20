@@ -80,12 +80,18 @@ export type GenerateNoncePayload = {
 export type Mutation = {
   __typename?: 'Mutation';
   auth: AuthPayload;
+  createProject: Project;
   generateNonce: GenerateNoncePayload;
 };
 
 
 export type MutationAuthArgs = {
   input: AuthInput;
+};
+
+
+export type MutationCreateProjectArgs = {
+  input: ProjectCreateInput;
 };
 
 
@@ -112,6 +118,10 @@ export type Project = {
   id: Scalars['String'];
   name: Scalars['String'];
   ownerId: Scalars['String'];
+};
+
+export type ProjectCreateInput = {
+  name: Scalars['String'];
 };
 
 export type ProjectListRelationFilter = {
@@ -188,6 +198,13 @@ export type AuthMutationVariables = Exact<{
 
 export type AuthMutation = { __typename?: 'Mutation', auth: { __typename?: 'AuthPayload', token: string } };
 
+export type CreateProjectMutationVariables = Exact<{
+  input: ProjectCreateInput;
+}>;
+
+
+export type CreateProjectMutation = { __typename?: 'Mutation', createProject: { __typename?: 'Project', id: string, name: string } };
+
 export type GenerateNonceMutationVariables = Exact<{
   input: GenerateNonceInput;
 }>;
@@ -234,6 +251,40 @@ export function useAuthMutation(baseOptions?: Apollo.MutationHookOptions<AuthMut
 export type AuthMutationHookResult = ReturnType<typeof useAuthMutation>;
 export type AuthMutationResult = Apollo.MutationResult<AuthMutation>;
 export type AuthMutationOptions = Apollo.BaseMutationOptions<AuthMutation, AuthMutationVariables>;
+export const CreateProjectDocument = gql`
+    mutation CreateProject($input: ProjectCreateInput!) {
+  createProject(input: $input) {
+    id
+    name
+  }
+}
+    `;
+export type CreateProjectMutationFn = Apollo.MutationFunction<CreateProjectMutation, CreateProjectMutationVariables>;
+
+/**
+ * __useCreateProjectMutation__
+ *
+ * To run a mutation, you first call `useCreateProjectMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateProjectMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createProjectMutation, { data, loading, error }] = useCreateProjectMutation({
+ *   variables: {
+ *      input: // value for 'input'
+ *   },
+ * });
+ */
+export function useCreateProjectMutation(baseOptions?: Apollo.MutationHookOptions<CreateProjectMutation, CreateProjectMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateProjectMutation, CreateProjectMutationVariables>(CreateProjectDocument, options);
+      }
+export type CreateProjectMutationHookResult = ReturnType<typeof useCreateProjectMutation>;
+export type CreateProjectMutationResult = Apollo.MutationResult<CreateProjectMutation>;
+export type CreateProjectMutationOptions = Apollo.BaseMutationOptions<CreateProjectMutation, CreateProjectMutationVariables>;
 export const GenerateNonceDocument = gql`
     mutation GenerateNonce($input: GenerateNonceInput!) {
   generateNonce(input: $input) {
