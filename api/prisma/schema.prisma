@@ -1,8 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
+}
+
+generator typegraphql {
+  provider = "typegraphql-prisma"
+  binaryTargets = ["native", "rhel-openssl-1.0.x"]
 }
 
 datasource db {
@@ -10,10 +12,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Transaction {
-  id                    String @id @default(uuid())
-  hash                  String
-  source                String
-  parameters_entrypoint String
-  parameters_value      Json?
+model Account {
+  id      String @id @default(uuid())
+  address String @unique
 }

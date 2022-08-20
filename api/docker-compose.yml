@@ -2,12 +2,12 @@ version: '2.2'
 
 services:
   postgres:
-    container_name: web3api_postgres_container
+    container_name: chestbox_postgres_container
     image: postgres
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
-      POSTGRES_DATABASE: web3api
+      POSTGRES_DATABASE: chestbox
       POSTGRESQL_FSYNC: "off"
       PGDATA: /data/postgres
     volumes:
@@ -19,7 +19,7 @@ services:
     restart: unless-stopped
 
   pgadmin:
-    container_name: web3api_pgadmin_container
+    container_name: chestbox_pgadmin_container
     image: dpage/pgadmin4
     environment:
       PGADMIN_DEFAULT_EMAIL: pgadmin4@pgadmin.org
