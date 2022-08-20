@@ -2,9 +2,26 @@ import { Arg, Ctx, Field, InputType, Mutation, ObjectType, Query, Resolver } fro
 import { Context } from "../../types/context";
 import { Account } from '@generated/type-graphql'
 import NodeCache from "node-cache";
-import { randomUUID } from "crypto";
-import { algoClient } from "../../algo";
-import { decodeSignedTransaction } from "algosdk";
+import { randomUUID,  } from "crypto";
+import algosdk, { decodeSignedTransaction, SignedTransaction } from "algosdk";
+import nacl from "tweetnacl";
+import { sign } from 'jsonwebtoken'
+
+
+const verifySignedTransaction = (stxn: SignedTransaction): boolean => {
+  if (stxn.sig === undefined) return false;
+
+  const pk_bytes = stxn.txn.from.publicKey;
+
+  const sig_bytes = new Uint8Array(stxn.sig);
+
+  const txn_bytes = algosdk.encodeObj(stxn.txn.get_obj_for_encoding());
+  const msg_bytes = new Uint8Array(txn_bytes.length + 2);
+  msg_bytes.set(Buffer.from("TX"));
+  msg_bytes.set(txn_bytes, 2);
+
+  return nacl.sign.detached.verify(msg_bytes, sig_bytes, pk_bytes);
+}
 
 
 const nonceCache = new NodeCache({ stdTTL: 60, checkperiod: 120 });
@@ -57,15 +74,20 @@ export class AuthResolver {
     }
   }
 
-  @Mutation(() => GenerateNoncePayload)
+  @Mutation(() => AuthPayload)
   async auth(
     @Arg("input") input: AuthInput
   ): Promise<AuthPayload> {
-    const txBuffer = Buffer.from(input.signedTxBase64, "base64")
-    const decoded = decodeSignedTransaction(txBuffer)
-    console.log(decoded.txn.from)
+    const stxBuffer = Buffer.from(input.signedTxBase64, "base64")
+    const signedTransaction = decodeSignedTransaction(stxBuffer)
+    const verified = verifySignedTransaction(signedTransaction)
+    if (!verified) {
+      throw new Error('Unauthorized')
+    }
+    const address = algosdk.encodeAddress(signedTransaction.txn.from.publicKey)
+    const token = sign({ address: address }, process.env.JWT_SECRET!)
     return {
-      token: '123',
+      token,
     }
   }
 }
