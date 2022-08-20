@@ -1,10 +1,9 @@
 import { FC } from "react";
-import { MyAccountInfo } from "react-web3-daisyui/dist/eth";
-import { useWeb3 } from "../hooks/useWeb3";
 import { Disclosure } from "@headlessui/react";
 import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
-import { ConnectWalletButton } from "./ConnectWalletButton";
+// import { useMeQuery } from '../generated/graphql'
+import { AuthButton } from "./AuthButton";
 
 export interface TopbarProps {}
 
@@ -15,7 +14,8 @@ interface NavigationLink {
 }
 
 export const Topbar: FC<TopbarProps> = (props) => {
-  const { accountAddress, loading } = useWeb3();
+  // const { data: me } = useMeQuery()
+  // console.log(me)
   const links: NavigationLink[] = [
     { name: "Dashboard", href: "#", current: true },
     { name: "Team", href: "#", current: false },
@@ -23,34 +23,34 @@ export const Topbar: FC<TopbarProps> = (props) => {
     { name: "Calendar", href: "#", current: false },
   ];
   const renderUserInfo = () => {
-    if (loading) {
-      return null;
-    }
-    if (accountAddress) {
-      return (
-        <div className="dropdown dropdown-end">
-          <label tabIndex={0} className="btn btn-ghost normal-case">
-            <MyAccountInfo />
-          </label>
-          <ul
-            tabIndex={0}
-            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-          >
-            <li>
-              <a className="justify-between">
-                Profile
-                <span className="badge">New</span>
-              </a>
-            </li>
-            <li>
-              <a>Settings</a>
-            </li>
-          </ul>
-        </div>
-      );
-    }
+    // if (loading) {
+    //   return null;
+    // }
+    // if (accountAddress) {
+    //   return (
+    //     <div className="dropdown dropdown-end">
+    //       <label tabIndex={0} className="btn btn-ghost normal-case">
+    //         <MyAccountInfo />
+    //       </label>
+    //       <ul
+    //         tabIndex={0}
+    //         className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
+    //       >
+    //         <li>
+    //           <a className="justify-between">
+    //             Profile
+    //             <span className="badge">New</span>
+    //           </a>
+    //         </li>
+    //         <li>
+    //           <a>Settings</a>
+    //         </li>
+    //       </ul>
+    //     </div>
+    //   );
+    // }
     return (
-      <ConnectWalletButton />
+      <AuthButton />
     );
   };
   return (

@@ -3,14 +3,17 @@ const resolveFrom = require('resolve-from')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin');
 
 const fixLinkedDependencies = config => {
-  config.resolve = {
-    ...config.resolve,
-    alias: {
-      ...config.resolve.alias,
-      react$: resolveFrom(path.resolve('node_modules'), 'react'),
-      'react-dom$': resolveFrom(path.resolve('node_modules'), 'react-dom'),
-    },
-  }
+  const fallback = config.resolve.fallback || {};
+  Object.assign(fallback, {
+    crypto: require.resolve("crypto-browserify"),
+    stream: require.resolve("stream-browserify"),
+    assert: require.resolve("assert"),
+    http: require.resolve("stream-http"),
+    https: require.resolve("https-browserify"),
+    os: require.resolve("os-browserify"),
+    url: require.resolve("url"),
+  });
+  config.resolve.fallback = fallback;
   config.resolve.plugins = config.resolve.plugins.filter(plugin => !(plugin instanceof ModuleScopePlugin));
   return config
 }

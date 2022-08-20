@@ -3,7 +3,9 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@headlessui/react": "^1.6.5",
+    "@apollo/client": "^3.6.9",
+    "@graphql-codegen/typescript": "^2.7.3",
+    "@headlessui/react": "^1.6.6",
     "@heroicons/react": "^1.0.6",
     "@rescripts/cli": "^0.0.16",
     "@testing-library/jest-dom": "^5.16.4",
@@ -13,23 +15,26 @@
     "@types/node": "^16.11.42",
     "@types/react": "^18.0.14",
     "@types/react-dom": "^18.0.5",
+    "algosdk": "^1.19.0",
     "classnames": "^2.3.1",
     "daisyui": "^2.17.0",
     "ethers": "^5.6.9",
+    "graphql": "^15.8.0",
+    "identicon.js": "^2.3.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-scripts": "5.0.1",
-    "react-web3-daisyui": "^0.0.2",
+    "react-toastify": "^9.0.8",
     "scheduler": "^0.23.0",
     "typescript": "^4.7.4",
-    "web-vitals": "^2.1.4",
-    "web3modal": "^1.9.8"
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "rescripts start",
     "build": "rescripts build",
     "test": "rescripts test",
-    "eject": "rescripts eject"
+    "eject": "rescripts eject",
+    "gqlgen": "graphql-codegen --config codegen.yml"
   },
   "eslintConfig": {
     "extends": [
@@ -50,6 +55,27 @@
     ]
   },
   "devDependencies": {
-    "tailwindcss": "^3.1.4"
+    "@graphql-codegen/cli": "2.11.6",
+    "@graphql-codegen/fragment-matcher": "3.3.1",
+    "@graphql-codegen/introspection": "2.2.1",
+    "@graphql-codegen/typescript": "2.7.3",
+    "@graphql-codegen/typescript-document-nodes": "2.3.3",
+    "@graphql-codegen/typescript-graphql-files-modules": "2.2.1",
+    "@graphql-codegen/typescript-operations": "2.5.3",
+    "@graphql-codegen/typescript-react-apollo": "3.3.3",
+    "@types/graphql": "^14.5.0",
+    "@types/identicon.js": "^2.3.1",
+    "@types/react-toastify": "^4.1.0",
+    "apollo": "^2.34.0",
+    "assert": "^2.0.0",
+    "buffer": "^6.0.3",
+    "crypto-browserify": "^3.12.0",
+    "https-browserify": "^1.0.0",
+    "os-browserify": "^0.3.0",
+    "process": "^0.11.10",
+    "stream-browserify": "^3.0.0",
+    "stream-http": "^3.2.0",
+    "tailwindcss": "^3.1.4",
+    "url": "^0.11.0"
   }
 }

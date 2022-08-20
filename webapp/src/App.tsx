@@ -1,14 +1,13 @@
+import { ApolloProvider } from '@apollo/client';
+import { client } from './client';
 import { Topbar } from './components/Topbar';
-import { Web3Provider } from './providers/web3';
-
-
 
 
 function App() {
   return (
-    <Web3Provider>
+    <ApolloProvider client={client}>
       <Topbar />
-    </Web3Provider>
+    </ApolloProvider>
   );
 }
 
