@@ -1,6 +1,7 @@
 import algosdk from "algosdk";
 import { useAuthMutation, useGenerateNonceMutation } from "../generated/graphql";
 import { Buffer } from 'buffer'
+import { useNavigate } from "react-router-dom";
 // import { useNavigate } from "react-router-dom"
 
 
@@ -12,7 +13,7 @@ type AuthFn = (address: string) => void
 export const useAuth =  (): AuthFn => {
   const [generateNonceMutate] = useGenerateNonceMutation()
   const [authMutate] = useAuthMutation()
-  // const navigate = useNavigate()
+  const navigate = useNavigate()
   const auth = async (address: string) => {
     if (typeof window.AlgoSigner !== 'undefined') {
       const { AlgoSigner } = window
@@ -55,6 +56,7 @@ export const useAuth =  (): AuthFn => {
         }
       })
       localStorage.setItem('token', authRes.data?.auth.token!)
+      navigate('/app/projects')
     } else {
       alert('AlgoSigner is not installed')
     };

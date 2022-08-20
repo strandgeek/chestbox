@@ -4,6 +4,10 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 // import { useMeQuery } from '../generated/graphql'
 import { AuthButton } from "./AuthButton";
+import { useMeQuery } from "../generated/graphql";
+import { getShortAddress } from "../utils/getShortAddress";
+import { getIdenticonSrc } from "../utils/getIdenticonSrc";
+import { useNavigate } from "react-router-dom";
 
 export interface TopbarProps {}
 
@@ -14,8 +18,13 @@ interface NavigationLink {
 }
 
 export const Topbar: FC<TopbarProps> = (props) => {
-  // const { data: me } = useMeQuery()
-  // console.log(me)
+  const { data: me, loading, client } = useMeQuery();
+  const navigate = useNavigate()
+  const logout = () => {
+    localStorage.removeItem('token');
+    navigate('/')
+    client.resetStore()
+  }
   const links: NavigationLink[] = [
     { name: "Dashboard", href: "#", current: true },
     { name: "Team", href: "#", current: false },
@@ -23,35 +32,33 @@ export const Topbar: FC<TopbarProps> = (props) => {
     { name: "Calendar", href: "#", current: false },
   ];
   const renderUserInfo = () => {
-    // if (loading) {
-    //   return null;
-    // }
-    // if (accountAddress) {
-    //   return (
-    //     <div className="dropdown dropdown-end">
-    //       <label tabIndex={0} className="btn btn-ghost normal-case">
-    //         <MyAccountInfo />
-    //       </label>
-    //       <ul
-    //         tabIndex={0}
-    //         className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
-    //       >
-    //         <li>
-    //           <a className="justify-between">
-    //             Profile
-    //             <span className="badge">New</span>
-    //           </a>
-    //         </li>
-    //         <li>
-    //           <a>Settings</a>
-    //         </li>
-    //       </ul>
-    //     </div>
-    //   );
-    // }
-    return (
-      <AuthButton />
-    );
+    if (loading) {
+      return null;
+    }
+    const accountAddress = me?.me?.address;
+    if (accountAddress) {
+      return (
+        <div className="dropdown dropdown-end">
+          <label tabIndex={0} className="btn btn-ghost normal-case">
+            <div className="avatar">
+              <div className="w-8 mr-3 rounded-full ring ring-primary ring-offset-base-100 ring-offset-2">
+                <img src={getIdenticonSrc(accountAddress)} />
+              </div>
+            </div>
+            {getShortAddress(accountAddress)}
+          </label>
+          <ul
+            tabIndex={0}
+            className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52"
+          >
+            <li>
+              <button onClick={() => logout()}>Logout</button>
+            </li>
+          </ul>
+        </div>
+      );
+    }
+    return <AuthButton />;
   };
   return (
     <Disclosure as="nav" className="bg-gray-800">
