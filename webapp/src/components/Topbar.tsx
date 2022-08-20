@@ -77,7 +77,9 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
                 </Disclosure.Button>
               </div>
               <div className="flex-1">
-                <a className="btn btn-ghost normal-case text-xl">daisyUI</a>
+                <a className="btn btn-ghost normal-case text-xl">
+                  <img src="/chestbox-logo.png" className="h-6" />
+                </a>
               </div>
             </div>
             <div className="navbar-center hidden lg:flex">

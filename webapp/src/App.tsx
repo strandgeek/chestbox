@@ -5,6 +5,7 @@ import { CreateAssetPage } from "./pages/CreateAssetPage";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
 import { HomePage } from "./pages/HomePage";
 import { ProjectsPage } from "./pages/ProjectsPage";
+import { ProjectViewPage } from "./pages/ProjectViewPage";
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/app/projects" element={<ProjectsPage />} />
+        <Route path="/app/projects/:projectId" element={<ProjectViewPage />} />
         <Route path="/app/projects/create" element={<CreateProjectPage />} />
         <Route path="/app/projects/assets/create" element={<CreateAssetPage />} />
       </Routes>

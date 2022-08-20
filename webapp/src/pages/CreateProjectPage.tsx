@@ -1,6 +1,6 @@
 import React, { FC } from "react";
 import { AppLayout } from "../layouts/AppLayout";
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { useCreateProjectMutation } from "../generated/graphql";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
