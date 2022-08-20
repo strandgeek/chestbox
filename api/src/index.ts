@@ -1,6 +1,5 @@
 import "reflect-metadata";
-import { resolvers } from "@generated/type-graphql";
-import express, { Express, Request, Response, Router } from 'express';
+import express, { Express } from 'express';
 import { ApolloServer } from "apollo-server-express";
 import dotenv from 'dotenv';
 import cors from 'cors';
@@ -9,6 +8,7 @@ import proxy from 'express-http-proxy';
 import { apiRouter } from './routes/api';
 import { buildSchema } from "type-graphql";
 import { db } from "../db";
+import { AuthResolver } from "../graphql/resolvers/Auth";
 
 
 dotenv.config();
@@ -16,12 +16,14 @@ dotenv.config();
 export const bootstrap = async () => {
   // GraphQL Setup
   const schema = await buildSchema({
-    resolvers,
+    resolvers: [
+      AuthResolver,
+    ],
     validate: false,
   });
   const server = new ApolloServer({
     schema,
-    context: () => ({ prisma: db }),
+    context: (ctx) => ({ ...ctx, prisma: db }),
   });
 
   // Express Setup
