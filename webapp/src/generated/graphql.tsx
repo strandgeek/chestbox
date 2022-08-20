@@ -17,8 +17,45 @@ export type Scalars = {
 
 export type Account = {
   __typename?: 'Account';
+  _count?: Maybe<AccountCount>;
   address: Scalars['String'];
   id: Scalars['String'];
+  projects: Array<Project>;
+};
+
+
+export type AccountProjectsArgs = {
+  cursor?: InputMaybe<ProjectWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ProjectScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ProjectOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectWhereInput>;
+};
+
+export type AccountCount = {
+  __typename?: 'AccountCount';
+  projects: Scalars['Int'];
+};
+
+export type AccountOrderByWithRelationInput = {
+  address?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  projects?: InputMaybe<ProjectOrderByRelationAggregateInput>;
+};
+
+export type AccountRelationFilter = {
+  is?: InputMaybe<AccountWhereInput>;
+  isNot?: InputMaybe<AccountWhereInput>;
+};
+
+export type AccountWhereInput = {
+  AND?: InputMaybe<Array<AccountWhereInput>>;
+  NOT?: InputMaybe<Array<AccountWhereInput>>;
+  OR?: InputMaybe<Array<AccountWhereInput>>;
+  address?: InputMaybe<StringFilter>;
+  id?: InputMaybe<StringFilter>;
+  projects?: InputMaybe<ProjectListRelationFilter>;
 };
 
 export type AuthInput = {
@@ -56,9 +93,92 @@ export type MutationGenerateNonceArgs = {
   input: GenerateNonceInput;
 };
 
+export type NestedStringFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
+};
+
+export type Project = {
+  __typename?: 'Project';
+  id: Scalars['String'];
+  name: Scalars['String'];
+  ownerId: Scalars['String'];
+};
+
+export type ProjectListRelationFilter = {
+  every?: InputMaybe<ProjectWhereInput>;
+  none?: InputMaybe<ProjectWhereInput>;
+  some?: InputMaybe<ProjectWhereInput>;
+};
+
+export type ProjectOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type ProjectOrderByWithRelationInput = {
+  id?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  owner?: InputMaybe<AccountOrderByWithRelationInput>;
+  ownerId?: InputMaybe<SortOrder>;
+};
+
+export enum ProjectScalarFieldEnum {
+  Id = 'id',
+  Name = 'name',
+  OwnerId = 'ownerId'
+}
+
+export type ProjectWhereInput = {
+  AND?: InputMaybe<Array<ProjectWhereInput>>;
+  NOT?: InputMaybe<Array<ProjectWhereInput>>;
+  OR?: InputMaybe<Array<ProjectWhereInput>>;
+  id?: InputMaybe<StringFilter>;
+  name?: InputMaybe<StringFilter>;
+  owner?: InputMaybe<AccountRelationFilter>;
+  ownerId?: InputMaybe<StringFilter>;
+};
+
+export type ProjectWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Account>;
+};
+
+export enum QueryMode {
+  Default = 'default',
+  Insensitive = 'insensitive'
+}
+
+export enum SortOrder {
+  Asc = 'asc',
+  Desc = 'desc'
+}
+
+export type StringFilter = {
+  contains?: InputMaybe<Scalars['String']>;
+  endsWith?: InputMaybe<Scalars['String']>;
+  equals?: InputMaybe<Scalars['String']>;
+  gt?: InputMaybe<Scalars['String']>;
+  gte?: InputMaybe<Scalars['String']>;
+  in?: InputMaybe<Array<Scalars['String']>>;
+  lt?: InputMaybe<Scalars['String']>;
+  lte?: InputMaybe<Scalars['String']>;
+  mode?: InputMaybe<QueryMode>;
+  not?: InputMaybe<NestedStringFilter>;
+  notIn?: InputMaybe<Array<Scalars['String']>>;
+  startsWith?: InputMaybe<Scalars['String']>;
 };
 
 export type AuthMutationVariables = Exact<{
@@ -78,7 +198,7 @@ export type GenerateNonceMutation = { __typename?: 'Mutation', generateNonce: { 
 export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
-export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Account', id: string, address: string } | null };
+export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Account', id: string, address: string, projects: Array<{ __typename?: 'Project', id: string, name: string }> } | null };
 
 
 export const AuthDocument = gql`
@@ -152,6 +272,10 @@ export const MeDocument = gql`
   me {
     id
     address
+    projects {
+      id
+      name
+    }
   }
 }
     `;

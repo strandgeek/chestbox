@@ -2,5 +2,9 @@ query Me{
   me {
     id
     address
+    projects {
+      id
+      name
+    }
   }
 }

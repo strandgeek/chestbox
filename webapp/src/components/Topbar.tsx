@@ -4,12 +4,15 @@ import { MenuIcon, XIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 // import { useMeQuery } from '../generated/graphql'
 import { AuthButton } from "./AuthButton";
-import { useMeQuery } from "../generated/graphql";
+import { Account } from "../generated/graphql";
 import { getShortAddress } from "../utils/getShortAddress";
 import { getIdenticonSrc } from "../utils/getIdenticonSrc";
 import { useNavigate } from "react-router-dom";
+import { useApolloClient } from "@apollo/client";
 
-export interface TopbarProps {}
+export interface TopbarProps {
+  me?: Partial<Account>
+}
 
 interface NavigationLink {
   name: string;
@@ -17,8 +20,8 @@ interface NavigationLink {
   current: boolean;
 }
 
-export const Topbar: FC<TopbarProps> = (props) => {
-  const { data: me, loading, client } = useMeQuery();
+export const Topbar: FC<TopbarProps> = ({ me }) => {
+  const client = useApolloClient()
   const navigate = useNavigate()
   const logout = () => {
     localStorage.removeItem('token');
@@ -32,10 +35,7 @@ export const Topbar: FC<TopbarProps> = (props) => {
     { name: "Calendar", href: "#", current: false },
   ];
   const renderUserInfo = () => {
-    if (loading) {
-      return null;
-    }
-    const accountAddress = me?.me?.address;
+    const accountAddress = me?.address;
     if (accountAddress) {
       return (
         <div className="dropdown dropdown-end">
