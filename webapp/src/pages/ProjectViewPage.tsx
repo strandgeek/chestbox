@@ -79,14 +79,16 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
                   </div>
                 </div>
               </div>
+              {currentAssetPreview?.description && currentAssetPreview.description !== "" && (
+                <div className="mt-8">
+                  <h3 className="text-xl font-bold mb-2">Description</h3>
+                  <p>
+                    {currentAssetPreview?.description}
+                  </p>
+                </div>
+              )}
               <div className="mt-8">
-                <h3 className="text-xl font-bold mb-2">Description</h3>
-                <p>
-                  {currentAssetPreview?.description}
-                </p>
-              </div>
-              <div className="mt-8">
-                {currentAssetPreview?.properties?.fields && (
+                {currentAssetPreview?.properties?.fields && currentAssetPreview?.properties?.fields.length > 0 && (
                   <div>
                     <h3 className="text-xl font-bold mb-2">Properties</h3>
                     <div className="overflow-x-auto">

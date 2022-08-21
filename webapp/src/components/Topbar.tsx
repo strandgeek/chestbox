@@ -1,13 +1,13 @@
 import { FC } from "react";
 import { Disclosure } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { CollectionIcon, LogoutIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 // import { useMeQuery } from '../generated/graphql'
 import { AuthButton } from "./AuthButton";
 import { Account } from "../generated/graphql";
 import { getShortAddress } from "../utils/getShortAddress";
 import { getIdenticonSrc } from "../utils/getIdenticonSrc";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
 
 export interface TopbarProps {
@@ -21,6 +21,7 @@ interface NavigationLink {
 }
 
 export const Topbar: FC<TopbarProps> = ({ me }) => {
+  const params = useParams()
   const client = useApolloClient()
   const navigate = useNavigate()
   const logout = () => {
@@ -34,6 +35,7 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
   ];
+  const currentProject = me?.projects?.find(p => p.id === params.projectId)
   const renderUserInfo = () => {
     const accountAddress = me?.address;
     if (accountAddress) {
@@ -51,8 +53,22 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
             tabIndex={0}
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52"
           >
+            {currentProject && (
+              <div className="p-4 font-bold">
+                {currentProject?.name}
+              </div>
+            )}
             <li>
-              <button onClick={() => logout()}>Logout</button>
+              <a href="/app/projects">
+                <CollectionIcon className="h-5 w-5" />
+                Change Project
+              </a>
+            </li>
+            <li>
+              <button onClick={() => logout()}>
+                <LogoutIcon className="h-5 w-5" />
+                Logout
+              </button>
             </li>
           </ul>
         </div>
