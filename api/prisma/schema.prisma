@@ -19,21 +19,34 @@ model Account {
 }
 
 model Project {
-  id       String         @id @default(uuid())
-  name     String
-  apiToken String         @unique
-  ownerId  String
-  owner    Account        @relation(fields: [ownerId], references: [id])
-  assets   ProjectAsset[]
+  id                  String               @id @default(uuid())
+  name                String
+  apiToken            String               @unique
+  ownerId             String
+  owner               Account              @relation(fields: [ownerId], references: [id])
+  assets              ProjectAsset[]
+  mintedProjectAssets MintedProjectAsset[]
 }
 
 model ProjectAsset {
-  id          String  @id @default(uuid())
-  name        String
-  slug        String
-  imageUrl    String
-  description String
-  properties  Json
-  projectId   String
-  project     Project @relation(fields: [projectId], references: [id])
+  id                  String               @id @default(uuid())
+  name                String
+  slug                String
+  imageUrl            String
+  description         String
+  properties          Json
+  projectId           String
+  project             Project              @relation(fields: [projectId], references: [id])
+  mintedProjectAssets MintedProjectAsset[]
+}
+
+model MintedProjectAsset {
+  id             String       @id @default(uuid())
+  assetID        BigInt
+  txnID          String
+  to             String
+  projectId      String
+  project        Project      @relation(fields: [projectId], references: [id])
+  projectAssetId String
+  projectAsset   ProjectAsset @relation(fields: [projectAssetId], references: [id])
 }
