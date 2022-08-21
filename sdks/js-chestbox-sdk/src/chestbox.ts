@@ -2,6 +2,24 @@ import algosdk from 'algosdk'
 import { gql, GraphQLClient } from 'graphql-request'
 import { createApiClient } from './client'
 
+export interface Asset {
+  id: string;
+  description: string;
+  imageUrl: string;
+  metadataUri: string;
+  name: string;
+  projectId: string;
+  properties: {
+    fields: {
+      type: string;
+      name: string;
+      value: string;
+    }[]
+  };
+  slug: string;
+}
+
+
 const GET_ASSET_URI_BY_SLUG_QUERY = gql`
   query AssetInfoByApiToken($slug: String!, $apiToken: String!) {
     asset: assetInfoByApiToken(slug: $slug, apiToken: $apiToken) {
@@ -16,9 +34,30 @@ const GET_ASSET_URI_BY_SLUG_QUERY = gql`
   }
 `
 
+const GET_MINTED_ASSET_BY_ID_QUERY = gql`
+  query MintedAssetInfoByApiToken($assetID: Float!, $apiToken: String!) {
+    mintedAsset: mintedAssetInfoByApiToken(assetID: $assetID, apiToken: $apiToken) {
+      id
+      to
+    }
+  }
+`
+
+const CREATE_MINTED_ASSET_MUTATION = gql`
+  mutation CreateMintedProjectAssetByApiToken($apiToken: String!, $input: MintedProjectAssetCreateInput!) {
+    createMintedProjectAssetByApiToken(apiToken: $apiToken, input: $input) {
+      id
+      assetID
+      projectId
+      to
+      txnID
+    }
+  }
+`
+
 export interface ChestBoxSDKOptions {
   apiToken: string
-  apiUri: string
+  apiUri?: string
   algodClient: algosdk.Algodv2
   minterAccount: algosdk.Account
 }
@@ -29,7 +68,8 @@ export interface MintAssetOptions {
 }
 
 export interface MintAssetPayload {
-  txId: string
+  txnID: string
+  assetID: number
 }
 
 export class ChestBoxSDK {
@@ -40,74 +80,81 @@ export class ChestBoxSDK {
   constructor(opts: ChestBoxSDKOptions) {
     this.apiToken = opts.apiToken
     this.algodClient = opts.algodClient
-    this.apiClient = createApiClient(opts.apiUri)
+    this.apiClient = createApiClient(opts.apiUri || 'https://chestbox.io/graphql')
     this.minterAccount = opts.minterAccount
   }
 
-  private async getAssetMetadataUriBySlug(slug: string): Promise<string> {
+  async getAsset(slug: string): Promise<Asset> {
     try {
       const res = await this.apiClient.request(GET_ASSET_URI_BY_SLUG_QUERY, {
-        slug,
         apiToken: this.apiToken,
+        slug,
       })
       const { asset } = res
-      return asset.metadataUri
+      return asset
     } catch (error) {
       throw error
     }
   }
 
-  async waitForConfirmation(txId, timeout) {
-    // Wait until the transaction is confirmed or rejected, or until 'timeout'
-    // number of rounds have passed.
-    //     Args:
-    // txId(str): the transaction to wait for
-    // timeout(int): maximum number of rounds to wait
-    // Returns:
-    // pending transaction information, or throws an error if the transaction
-    // is not confirmed or rejected in the next timeout rounds
-    if (this.algodClient == null || txId == null || timeout < 0) {
-      throw new Error('Bad arguments.');
+  async getMintedAsset(assetID: number): Promise<{ id: string, to: string }> {
+    try {
+      const res = await this.apiClient.request(GET_MINTED_ASSET_BY_ID_QUERY, {
+        apiToken: this.apiToken,
+        assetID,
+      })
+      const { mintedAsset } = res
+      return mintedAsset
+    } catch (error) {
+      throw error
     }
-    const status = await this.algodClient.status().do();
-    if (typeof status === 'undefined')
-      throw new Error('Unable to get node status');
-    const startround = status['last-round'] + 1;
-    let currentround = startround;
-  
-    /* eslint-disable no-await-in-loop */
-    while (currentround < startround + timeout) {
-      const pendingInfo = await this.algodClient
-        .pendingTransactionInformation(txId)
-        .do();
-      if (pendingInfo !== undefined) {
-        if (
-          pendingInfo['confirmed-round'] !== null &&
-          pendingInfo['confirmed-round'] > 0
-        ) {
-          // Got the completed Transaction
-          return pendingInfo;
-        }
-  
-        if (
-          pendingInfo['pool-error'] != null &&
-          pendingInfo['pool-error'].length > 0
-        ) {
-          // If there was a pool error, then the transaction has been rejected!
-          throw new Error(
-            `Transaction Rejected pool error${pendingInfo['pool-error']}`
-          );
-        }
-      }
-      await this.algodClient.statusAfterBlock(currentround).do();
-      currentround += 1;
-    }
-    /* eslint-enable no-await-in-loop */
-    throw new Error(`Transaction not confirmed after ${timeout} rounds!`);
   }
 
-  async mintAsset({ slug, to }: MintAssetOptions): Promise<MintAssetPayload> {
-    const assetUrl = await this.getAssetMetadataUriBySlug(slug)
+  /**
+   * Create internal record of minted token on ChestBox platform
+   * This method is used to keep tracking all tokens minted on Game-Server
+   * @param  string slug The asset slug
+   * @param  string to the player asset
+   * @param  string txnID the mint transaction id
+   * @param  string the minted token assetID
+  */
+  private async createMintedAsset({
+    slug,
+    to,
+    txnID,
+    assetID,
+  }: {
+    slug: string,
+    to: string,
+    txnID: string,
+    assetID: string,
+  }): Promise<Asset> {
+    try {
+      const res = await this.apiClient.request(CREATE_MINTED_ASSET_MUTATION, {
+        apiToken: this.apiToken,
+        input: {
+          slug,
+          to,
+          txnID,
+          assetID,
+        },
+      })
+      const { asset } = res
+      return asset
+    } catch (error) {
+      throw error
+    }
+  }
+
+  /**
+   * Claim a asset to a player
+   * This method will mint an NFT token and save the user address (to), so it can be transferred after opt-in
+   * @param  string slug The asset slug
+   * @returns {Promise} the claimed asset info
+  */
+  async claimAsset({ slug, to }: MintAssetOptions): Promise<MintAssetPayload> {
+    const asset = await this.getAsset(slug)
+    const assetUrl = asset.metadataUri
     const params = await this.algodClient.getTransactionParams().do();
     const creator = this.minterAccount.addr;
     const defaultFrozen = false;
@@ -118,26 +165,60 @@ export class ChestBoxSDK {
     let assetMetadataHash = undefined;
     const decimals = 0;
     const txn = algosdk.makeAssetCreateTxnWithSuggestedParams(
-        creator,
-        undefined,
-        1,
-        decimals,
-        defaultFrozen,
-        manager,
-        reserve,
-        freeze,
-        clawback,
-        "NFT",
-        "ChestBoxNFT",
-        assetUrl,
-        assetMetadataHash,
-        params,
+      creator,
+      undefined,
+      1,
+      decimals,
+      defaultFrozen,
+      manager,
+      reserve,
+      freeze,
+      clawback,
+      "NFT",
+      "ChestBoxNFT",
+      assetUrl,
+      assetMetadataHash,
+      params,
     );
     const signedTxn = algosdk.signTransaction(txn, this.minterAccount.sk);
     const tx = await this.algodClient.sendRawTransaction(signedTxn.blob).do();
-    await this.waitForConfirmation(tx.txId, 10)
+    const txnID = tx.txId
+    const ptx = await algosdk.waitForConfirmation(this.algodClient, txnID, 4);
+    const assetID = ptx["asset-index"];
+    await this.createMintedAsset({
+      assetID,
+      slug,
+      to,
+      txnID,
+    })
     return {
-      txId: tx.txId,
+      txnID,
+      assetID,
+    }
+  }
+
+  /**
+   * Complete the asset claim after the user opt-in in frontend
+   * @param  number assetID The assetID to be transferred to the player
+   * @returns {Promise} the transfer transaction info
+   */
+  async completeClaimAsset({ assetID }: { assetID: number }): Promise<{ txnID: string }> {
+    const mintedAsset = await this.getMintedAsset(assetID)
+    console.log(`Transfering assetID=${assetID} to address=${mintedAsset.to}...`)
+    const params = await this.algodClient.getTransactionParams().do();
+    const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
+      from: this.minterAccount.addr,
+      to: mintedAsset.to,
+      assetIndex: assetID,
+      amount: 1,
+      suggestedParams: params,
+    });
+    const signedTxn = algosdk.signTransaction(txn, this.minterAccount.sk);
+    const tx = await this.algodClient.sendRawTransaction(signedTxn.blob).do();
+    const txnID = tx.txId
+    const ptx = await algosdk.waitForConfirmation(this.algodClient, txnID, 4);
+    return {
+      txnID
     }
   }
 }
