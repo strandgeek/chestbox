@@ -1,8 +1,5 @@
-import { Arg, Authorized, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
-import algosdk, { decodeSignedTransaction } from "algosdk";
-import { sign } from 'jsonwebtoken'
+import { Arg, Authorized, Ctx, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Project } from '@generated/type-graphql'
-import { AuthPayload } from "./Auth";
 import { Context } from "../../types/context";
 
 @InputType()
@@ -30,5 +27,22 @@ export class ProjectResolver {
       }
     })
     return project
+  }
+
+  @Authorized()
+  @Query(() => Project, { nullable: true})
+  async project(
+    @Arg("id") id: string,
+    @Ctx() ctx: Context
+  ): Promise<Project | null> {
+    const { me, prisma } = ctx
+    if (!me) {
+      return null
+    }
+    return prisma.project.findUniqueOrThrow({
+      where: {
+        id,
+      }
+    })
   }
 }
