@@ -4,16 +4,20 @@ import { ApolloServer } from "apollo-server-express";
 import dotenv from 'dotenv';
 import cors from 'cors';
 import proxy from 'express-http-proxy';
-// Routes
-import { apiRouter } from './routes/api';
+import { AccountRelationsResolver, ProjectRelationsResolver } from '@generated/type-graphql'
 import { buildSchema } from "type-graphql";
 import { db } from "../db";
+
+// API Routes
+import { metadataRouter } from './routes/metadata';
+
+// GraphQL Resolvers
 import { AuthResolver } from "../graphql/resolvers/Auth";
-import { AccountRelationsResolver, ProjectRelationsResolver } from '@generated/type-graphql'
 import { authChecker } from "./authChecker";
 import { ProjectResolver } from "../graphql/resolvers/Project";
 import { ImageResolver } from "../graphql/resolvers/Image";
 import { ProjectAssetResolver } from "../graphql/resolvers/ProjectAsset";
+import { ProjectAPIResolver } from "../graphql/resolvers/ProjectAPI";
 
 
 dotenv.config();
@@ -28,6 +32,7 @@ export const bootstrap = async () => {
       ImageResolver,
       ProjectAssetResolver,
       ProjectRelationsResolver,
+      ProjectAPIResolver,
     ],
     validate: false,
     authChecker,
@@ -45,18 +50,18 @@ export const bootstrap = async () => {
   await server.start()
   server.applyMiddleware({ app, path: '/graphql' });
 
-  // Serve static builded webapp or proxy to local webapp for development mode
-  if (process.env.NODE_ENV === 'production') {
-    app.use(express.static('../webapp/build'));
-  } else {
-    app.use(proxy('http://localhost:3000', {
-      filter: function(req, res) {
-        return !req.path.includes('/api')
-      }
-    }));
-  }
-  
-  app.use('/api', apiRouter)
+  app.use('/metadata', metadataRouter)
+
+  // // Serve static builded webapp or proxy to local webapp for development mode
+  // if (process.env.NODE_ENV === 'production') {
+  //   app.use(express.static('../webapp/build'));
+  // } else {
+  //   app.use(proxy('http://localhost:3000', {
+  //     filter: function(req, res) {
+  //       return !req.path.includes('/api')
+  //     }
+  //   }));
+  // }
   
   app.listen(port, () => {
     console.log(`⚡️[server]: Server is running at https://localhost:${port}`);

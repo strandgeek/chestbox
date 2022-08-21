@@ -1,4 +1,4 @@
-import { Arg, Authorized, Ctx, Field, InputType, Mutation, Resolver } from "type-graphql";
+import { Arg, Authorized, Ctx, Field, FieldResolver, InputType, Mutation, Resolver, Root } from "type-graphql";
 import { ProjectAsset } from '@generated/type-graphql'
 import { Context } from "../../types/context";
 import { Prisma } from "@prisma/client";
@@ -24,7 +24,7 @@ export class ProjectAssetCreateInput {
   projectId: string;
 }
 
-@Resolver()
+@Resolver(of => ProjectAsset)
 export class ProjectAssetResolver {
   @Authorized()
   @Mutation(() => ProjectAsset)
@@ -65,5 +65,10 @@ export class ProjectAssetResolver {
       },
     })
     return projectAsset
+  }
+
+  @FieldResolver(() => String)
+  metadataUri(@Root() projectAsset: ProjectAsset) {
+    return `${process.env.APP_BASE_URL}/metadata/${projectAsset.id}`
   }
 }

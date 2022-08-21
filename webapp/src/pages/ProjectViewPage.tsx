@@ -1,4 +1,4 @@
-import { PlusIcon } from "@heroicons/react/outline";
+import { ExternalLinkIcon, PlusIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -73,9 +73,15 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
                   </div>
                 </div>
                 <div className="ml-4">
+                <a href={currentAssetPreview?.metadataUri} className="text-sm text-primary flex items-center">
+                      View Metadata
+                      <ExternalLinkIcon className="h-4 w-5 ml-1" />
+                    </a>
                   <h3 className="text-2xl">{currentAssetPreview?.name}</h3>
                   <div>
                     <span className="opacity-60 mr-2">{currentAssetPreview?.slug}</span>
+                  </div>
+                  <div>
                   </div>
                 </div>
               </div>
