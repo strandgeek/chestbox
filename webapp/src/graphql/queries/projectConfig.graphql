@@ -1,0 +1,7 @@
+query ProjectConfig($id: String!) {
+  project(id: $id) {
+    id
+    name
+    apiToken
+  }
+}

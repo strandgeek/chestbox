@@ -1,41 +1,66 @@
 import { FC } from "react";
 import { Disclosure } from "@headlessui/react";
-import { CollectionIcon, LogoutIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import {
+  CollectionIcon,
+  LogoutIcon,
+  MenuIcon,
+  XIcon,
+} from "@heroicons/react/outline";
 import classNames from "classnames";
 // import { useMeQuery } from '../generated/graphql'
 import { AuthButton } from "./AuthButton";
 import { Account } from "../generated/graphql";
 import { getShortAddress } from "../utils/getShortAddress";
 import { getIdenticonSrc } from "../utils/getIdenticonSrc";
-import { useNavigate, useParams } from "react-router-dom";
+import {
+  Link,
+  useLocation,
+  useNavigate,
+  useParams,
+  useResolvedPath,
+} from "react-router-dom";
 import { useApolloClient } from "@apollo/client";
 
 export interface TopbarProps {
-  me?: Partial<Account>
+  me?: Partial<Account>;
 }
 
 interface NavigationLink {
   name: string;
-  href: string;
+  to: string;
   current: boolean;
 }
 
 export const Topbar: FC<TopbarProps> = ({ me }) => {
-  const params = useParams()
-  const client = useApolloClient()
-  const navigate = useNavigate()
+  const params = useParams();
+  const location = useLocation();
+  const client = useApolloClient();
+  const navigate = useNavigate();
   const logout = () => {
-    localStorage.removeItem('token');
-    navigate('/')
-    client.resetStore()
-  }
+    localStorage.removeItem("token");
+    navigate("/");
+    client.resetStore();
+  };
+  const assetsLink = `/app/projects/${params.projectId}`;
+  const configLink = `/app/projects/${params.projectId}/configuration`;
   const links: NavigationLink[] = [
-    { name: "Dashboard", href: "#", current: true },
-    { name: "Team", href: "#", current: false },
-    { name: "Projects", href: "#", current: false },
-    { name: "Calendar", href: "#", current: false },
+    {
+      name: "Assets",
+      to: `/app/projects/${params.projectId}`,
+      current: location.pathname === assetsLink,
+    },
+    {
+      name: "Minted Tokens",
+      to: `/app/projects/${params.projectId}/minted-tokens`,
+      current: false,
+    },
+    {
+      name: "Configuration",
+      to: configLink,
+      current: location.pathname === configLink,
+    },
   ];
-  const currentProject = me?.projects?.find(p => p.id === params.projectId)
+  const currentProject = me?.projects?.find((p) => p.id === params.projectId);
   const renderUserInfo = () => {
     const accountAddress = me?.address;
     if (accountAddress) {
@@ -54,9 +79,7 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
             className="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-200 rounded-box w-52"
           >
             {currentProject && (
-              <div className="p-4 font-bold">
-                {currentProject?.name}
-              </div>
+              <div className="p-4 font-bold">{currentProject?.name}</div>
             )}
             <li>
               <a href="/app/projects">
@@ -99,13 +122,20 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
               </div>
             </div>
             <div className="navbar-center hidden lg:flex">
-              <ul className="menu menu-horizontal p-0">
+              <div className="tabs tabs-boxed">
                 {links.map((link) => (
-                  <li className="mr-2 last:mr-0">
-                    <a href={link.href}>{link.name}</a>
-                  </li>
+                  <Link
+                    to={link.to}
+                    className={classNames(
+                      link.current
+                        ? "tab-active": "",
+                      "tab"
+                    )}
+                  >
+                    {link.name}
+                  </Link>
                 ))}
-              </ul>
+              </div>
             </div>
             <div className="navbar-end">
               <div className="flex-none">{renderUserInfo()}</div>
@@ -115,10 +145,9 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
           <Disclosure.Panel className="sm:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 bg-base-200">
               {links.map((item) => (
-                <Disclosure.Button
+                <Link
                   key={item.name}
-                  as="a"
-                  href={item.href}
+                  to={item.to}
                   className={classNames(
                     item.current
                       ? "bg-primary text-primary-content"
@@ -128,7 +157,7 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
                   aria-current={item.current ? "page" : undefined}
                 >
                   {item.name}
-                </Disclosure.Button>
+                </Link>
               ))}
             </div>
           </Disclosure.Panel>
