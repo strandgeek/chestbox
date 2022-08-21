@@ -2,6 +2,8 @@ import React, { FC } from "react";
 import { useParams } from "react-router-dom";
 import { useProjectConfigQuery } from "../generated/graphql";
 import { AppLayout } from "../layouts/AppLayout";
+import SyntaxHighlighter from "react-syntax-highlighter";
+import { vs2015 as dark } from "react-syntax-highlighter/dist/esm/styles/hljs";
 
 export interface ProjectConfigurationPageProps {}
 
@@ -17,7 +19,7 @@ export const ProjectConfigurationPage: FC<ProjectConfigurationPageProps> = (
   const project = data?.project || ({} as any);
   return (
     <AppLayout>
-      <div className="mx-auto max-w-2xl mt-24">
+      <div className="mx-auto max-w-3xl mt-24">
         <h3 className="text-3xl mb-8 mx-2">{project.name}</h3>
         <div className="card bg-base-300">
           <div className="card-body">
@@ -46,7 +48,7 @@ export const ProjectConfigurationPage: FC<ProjectConfigurationPageProps> = (
                   </a>
                   <span className="tooltip" data-tip="Coming Soon">
                     <a className="tab tab-lifted cursor-not-allowed">
-                    <img src="/sdks/go.svg" className="h-6 mr-1" />
+                      <img src="/sdks/go.svg" className="h-6 mr-1" />
                       Go
                     </a>
                   </span>
@@ -64,7 +66,21 @@ export const ProjectConfigurationPage: FC<ProjectConfigurationPageProps> = (
                   </div>
                 </div>
                 <div className="p-8">
-                  TBD
+                  <SyntaxHighlighter language="typescript" style={dark} customStyle={{ background: '#15191F', padding: '24px', fontSize: '14px'}}>
+                    {[
+                      `import ChestBoxSDK from '@strandgeek/chestbox-sdk';`,
+                      ``,
+                      `const chestbox = new ChestBoxSDK({ apiToken: 'YOUR_API_TOKEN' })`,
+                      ``,
+                      ``,
+                      `chestbox.mintAsset({`,
+                      `  slug: "basic-sword",`,
+                      `  to: "DNKRBWSS3GF57WGRR7OMG6DUS2EHPMYLJ364LOCJG6C5FBZKX4DMKVKS3Y"`,
+                      `})`,
+                      `.then((data) => console.log(data))`,
+                      `.catch((err) => console.log(err))`,
+                    ].join('\n')}
+                  </SyntaxHighlighter>
                 </div>
               </div>
             </div>

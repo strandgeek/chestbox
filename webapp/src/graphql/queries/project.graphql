@@ -9,6 +9,7 @@ query Project($id: String!) {
       projectId
       properties
       imageUrl
+      metadataUri
     }
   }
 }

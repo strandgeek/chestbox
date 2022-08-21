@@ -177,6 +177,7 @@ export type ProjectAsset = {
   description: Scalars['String'];
   id: Scalars['String'];
   imageUrl: Scalars['String'];
+  metadataUri: Scalars['String'];
   name: Scalars['String'];
   projectId: Scalars['String'];
   properties: Scalars['JSON'];
@@ -300,8 +301,15 @@ export type ProjectWhereUniqueInput = {
 
 export type Query = {
   __typename?: 'Query';
+  assetInfoByApiToken: ProjectAsset;
   me?: Maybe<Account>;
   project?: Maybe<Project>;
+};
+
+
+export type QueryAssetInfoByApiTokenArgs = {
+  apiToken: Scalars['String'];
+  slug: Scalars['String'];
 };
 
 
@@ -379,7 +387,7 @@ export type ProjectQueryVariables = Exact<{
 }>;
 
 
-export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, assets: Array<{ __typename?: 'ProjectAsset', id: string, name: string, slug: string, description: string, projectId: string, properties: any, imageUrl: string }> } | null };
+export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, assets: Array<{ __typename?: 'ProjectAsset', id: string, name: string, slug: string, description: string, projectId: string, properties: any, imageUrl: string, metadataUri: string }> } | null };
 
 export type ProjectConfigQueryVariables = Exact<{
   id: Scalars['String'];
@@ -608,6 +616,7 @@ export const ProjectDocument = gql`
       projectId
       properties
       imageUrl
+      metadataUri
     }
   }
 }
