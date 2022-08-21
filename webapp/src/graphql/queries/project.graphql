@@ -1,0 +1,14 @@
+query Project($id: String!) {
+  project(id: $id) {
+    id
+    assets {
+      id
+      name
+      slug
+      description
+      projectId
+      properties
+      imageUrl
+    }
+  }
+}

@@ -154,9 +154,21 @@ export type NestedStringFilter = {
 export type Project = {
   __typename?: 'Project';
   _count?: Maybe<ProjectCount>;
+  assets: Array<ProjectAsset>;
   id: Scalars['String'];
   name: Scalars['String'];
+  owner: Account;
   ownerId: Scalars['String'];
+};
+
+
+export type ProjectAssetsArgs = {
+  cursor?: InputMaybe<ProjectAssetWhereUniqueInput>;
+  distinct?: InputMaybe<Array<ProjectAssetScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<ProjectAssetOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<ProjectAssetWhereInput>;
 };
 
 export type ProjectAsset = {
@@ -189,6 +201,27 @@ export type ProjectAssetOrderByRelationAggregateInput = {
   _count?: InputMaybe<SortOrder>;
 };
 
+export type ProjectAssetOrderByWithRelationInput = {
+  description?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  imageUrl?: InputMaybe<SortOrder>;
+  name?: InputMaybe<SortOrder>;
+  project?: InputMaybe<ProjectOrderByWithRelationInput>;
+  projectId?: InputMaybe<SortOrder>;
+  properties?: InputMaybe<SortOrder>;
+  slug?: InputMaybe<SortOrder>;
+};
+
+export enum ProjectAssetScalarFieldEnum {
+  Description = 'description',
+  Id = 'id',
+  ImageUrl = 'imageUrl',
+  Name = 'name',
+  ProjectId = 'projectId',
+  Properties = 'properties',
+  Slug = 'slug'
+}
+
 export type ProjectAssetWhereInput = {
   AND?: InputMaybe<Array<ProjectAssetWhereInput>>;
   NOT?: InputMaybe<Array<ProjectAssetWhereInput>>;
@@ -201,6 +234,10 @@ export type ProjectAssetWhereInput = {
   projectId?: InputMaybe<StringFilter>;
   properties?: InputMaybe<JsonFilter>;
   slug?: InputMaybe<StringFilter>;
+};
+
+export type ProjectAssetWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
 };
 
 export type ProjectCount = {
@@ -259,6 +296,12 @@ export type ProjectWhereUniqueInput = {
 export type Query = {
   __typename?: 'Query';
   me?: Maybe<Account>;
+  project?: Maybe<Project>;
+};
+
+
+export type QueryProjectArgs = {
+  id: Scalars['String'];
 };
 
 export enum QueryMode {
@@ -325,6 +368,13 @@ export type MeQueryVariables = Exact<{ [key: string]: never; }>;
 
 
 export type MeQuery = { __typename?: 'Query', me?: { __typename?: 'Account', id: string, address: string, projects: Array<{ __typename?: 'Project', id: string, name: string }> } | null };
+
+export type ProjectQueryVariables = Exact<{
+  id: Scalars['String'];
+}>;
+
+
+export type ProjectQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, assets: Array<{ __typename?: 'ProjectAsset', id: string, name: string, slug: string, description: string, projectId: string, properties: any, imageUrl: string }> } | null };
 
 
 export const AuthDocument = gql`
@@ -534,6 +584,50 @@ export function useMeLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<MeQuery
 export type MeQueryHookResult = ReturnType<typeof useMeQuery>;
 export type MeLazyQueryHookResult = ReturnType<typeof useMeLazyQuery>;
 export type MeQueryResult = Apollo.QueryResult<MeQuery, MeQueryVariables>;
+export const ProjectDocument = gql`
+    query Project($id: String!) {
+  project(id: $id) {
+    id
+    assets {
+      id
+      name
+      slug
+      description
+      projectId
+      properties
+      imageUrl
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectQuery__
+ *
+ * To run a query within a React component, call `useProjectQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useProjectQuery(baseOptions: Apollo.QueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, options);
+      }
+export function useProjectLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectQuery, ProjectQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProjectQuery, ProjectQueryVariables>(ProjectDocument, options);
+        }
+export type ProjectQueryHookResult = ReturnType<typeof useProjectQuery>;
+export type ProjectLazyQueryHookResult = ReturnType<typeof useProjectLazyQuery>;
+export type ProjectQueryResult = Apollo.QueryResult<ProjectQuery, ProjectQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

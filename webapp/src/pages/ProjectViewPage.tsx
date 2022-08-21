@@ -1,13 +1,27 @@
 import { PlusIcon } from "@heroicons/react/outline";
-import React, { FC } from "react";
+import classNames from "classnames";
+import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { ProjectAsset, useProjectQuery } from "../generated/graphql";
 import { AppLayout } from "../layouts/AppLayout";
 
 export interface ProjectViewPageProps {}
 
 export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
+  const [currentAssetPreview, setCurrentAssetPreview] = useState<ProjectAsset>()
   const params = useParams()
-  const tiles = Array.from(Array(800).keys());
+  const { data: projectData } = useProjectQuery({
+    variables: {
+      id: params.projectId!,
+    }
+  })
+  useEffect(() => {
+    if (projectData?.project?.assets?.length) {
+      setCurrentAssetPreview(projectData?.project?.assets[0])
+    }
+  }, [projectData])
+  const project = projectData?.project || { assets: []} 
+  const tiles = Array.from(Array(800 - project.assets.length).keys());
   const col = 10;
   return (
     <AppLayout>
@@ -23,6 +37,23 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
             </div>
             <div className="bg-base-200 rounded-md shadow-xs p-3 h-full">
               <div className="grid grid-cols-10 max-h-[600px] overflow-y-auto">
+                {project.assets.map((a) => {
+                  const className = classNames(
+                    'w-12 h-12 bg-base-300 m-2 shrink-0 p-2',
+                    {
+                      'border-2 border-base-100 cursor-pointer': currentAssetPreview?.slug !== a.slug,
+                      'border-2 border-yellow-700': currentAssetPreview?.slug === a.slug,
+                    }
+                  )
+                  console.log(currentAssetPreview?.slug === a.slug)
+                  return (
+                    <div className="flex items-center justify-center">
+                      <button className={className} onClick={() => setCurrentAssetPreview(a)}>
+                        <img src={a.imageUrl} className="w-full h-full" />
+                      </button>
+                    </div>
+                  )
+                })}
                 {tiles.map((t) => (
                   <div className="flex items-center justify-center">
                     <div className="w-12 h-12 bg-base-300 m-2 shrink-0 border-2 border-base-100"></div>
@@ -36,23 +67,21 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
             <div className="bg-base-200 rounded-md shadow-xs p-8 h-full">
               <div className="flex">
                 <div className="avatar">
-                  <div className="w-24 rounded">
-                    <img src="https://placeimg.com/192/192/people" />
+                  <div className="w-24 rounded bg-base-300 shrink-0 border-2 border-base-100 p-2">
+                    <img src={currentAssetPreview?.imageUrl} />
                   </div>
                 </div>
                 <div className="ml-4">
-                  <h3 className="text-2xl">My Super Sword</h3>
+                  <h3 className="text-2xl">{currentAssetPreview?.name}</h3>
                   <div>
-                    <span className="opacity-60 mr-2">my-syper-sword</span>
+                    <span className="opacity-60 mr-2">{currentAssetPreview?.slug}</span>
                   </div>
                 </div>
               </div>
               <div className="mt-8">
                 <h3 className="text-xl font-bold mb-2">Description</h3>
                 <p>
-                  Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-                  lacinia ornare dui. Duis at nunc mattis, dapibus ligula ut,
-                  imperdiet purus. Duis vestibulum vestibulum sodales.
+                  {currentAssetPreview?.description}
                 </p>
               </div>
               <div className="mt-8">
