@@ -2,6 +2,7 @@ import { PlusIcon } from "@heroicons/react/outline";
 import classNames from "classnames";
 import React, { FC, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import { PropertyField } from "../components/PropertiesInput";
 import { ProjectAsset, useProjectQuery } from "../generated/graphql";
 import { AppLayout } from "../layouts/AppLayout";
 
@@ -85,25 +86,23 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
                 </p>
               </div>
               <div className="mt-8">
-                <h3 className="text-xl font-bold mb-2">Properties</h3>
-                <div className="overflow-x-auto">
-                  <table className="table w-full">
-                    <tbody>
-                      <tr>
-                        <td>Level</td>
-                        <td>2</td>
-                      </tr>
-                      <tr>
-                        <td>Attack</td>
-                        <td>480</td>
-                      </tr>
-                      <tr>
-                        <td>Weigth</td>
-                        <td>54</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
+                {currentAssetPreview?.properties?.fields && (
+                  <div>
+                    <h3 className="text-xl font-bold mb-2">Properties</h3>
+                    <div className="overflow-x-auto">
+                      <table className="table w-full">
+                        <tbody>
+                          {(currentAssetPreview?.properties?.fields || []).map((f: PropertyField) => (
+                            <tr>
+                              <td>{f.name}</td>
+                              <td>{f.value}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                )}
               </div>
               <div className="mt-8"></div>
             </div>

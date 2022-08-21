@@ -1,11 +1,11 @@
-import React, { FC } from "react";
+import React, { FC, useState } from "react";
 import { AppLayout } from "../layouts/AppLayout";
 import { useNavigate, useParams } from "react-router-dom";
 // import { useCreateAssetMutation } from "../generated/graphql";
 import { toast } from "react-toastify";
 import { useForm } from "react-hook-form";
 import { UploadIcon } from "@heroicons/react/outline";
-import { PropertiesInput } from "../components/PropertiesInput";
+import { PropertiesInput, PropertyField } from "../components/PropertiesInput";
 import { useCreateProjectAssetMutation, useUploadImageMutation } from "../generated/graphql";
 import { PLACEHOLDER_IMAGE } from "../consts";
 import slugify from "slugify";
@@ -41,6 +41,7 @@ export const CreateAssetPage: FC<CreateAssetPageProps> = (props) => {
     }
   });
   const [uploadImage, { loading: uploading }] = useUploadImageMutation()
+  const [fields, setFields] = useState<PropertyField[]>([]);
   // const [CreateAssetMutate] = useCreateAssetMutation()
   
   const onSubmit = async ({ name, slug, imageUrl, description }: FormData) => {
@@ -53,7 +54,7 @@ export const CreateAssetPage: FC<CreateAssetPageProps> = (props) => {
             description,
             imageUrl,
             projectId: params.projectId!,
-            properties: JSON.stringify({ value: 100 }),
+            properties: JSON.stringify({ fields }),
           }
         }
       })
@@ -155,7 +156,7 @@ export const CreateAssetPage: FC<CreateAssetPageProps> = (props) => {
                   <label className="label">
                     <span className="label-text font-bold text-lg mb-2">Properties</span>
                   </label>
-                  <PropertiesInput />
+                  <PropertiesInput fields={fields} setFields={setFields} />
                 </div>
               </div>
             </div>
