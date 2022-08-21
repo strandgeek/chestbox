@@ -4,7 +4,7 @@ import { ApolloServer } from "apollo-server-express";
 import dotenv from 'dotenv';
 import cors from 'cors';
 import proxy from 'express-http-proxy';
-import { AccountRelationsResolver, ProjectRelationsResolver } from '@generated/type-graphql'
+import { AccountRelationsResolver, ProjectRelationsResolver, MintedProjectAssetRelationsResolver } from '@generated/type-graphql'
 import { buildSchema } from "type-graphql";
 import { db } from "../db";
 
@@ -33,6 +33,7 @@ export const bootstrap = async () => {
       ProjectAssetResolver,
       ProjectRelationsResolver,
       ProjectAPIResolver,
+      MintedProjectAssetRelationsResolver,
     ],
     validate: false,
     authChecker,

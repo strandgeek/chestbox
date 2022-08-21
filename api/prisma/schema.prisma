@@ -13,9 +13,10 @@ datasource db {
 }
 
 model Account {
-  id       String    @id @default(uuid())
-  address  String    @unique
-  projects Project[]
+  id        String    @id @default(uuid())
+  address   String    @unique
+  projects  Project[]
+  createdAt DateTime  @default(now())
 }
 
 model Project {
@@ -26,6 +27,7 @@ model Project {
   owner               Account              @relation(fields: [ownerId], references: [id])
   assets              ProjectAsset[]
   mintedProjectAssets MintedProjectAsset[]
+  createdAt           DateTime             @default(now())
 }
 
 model ProjectAsset {
@@ -38,6 +40,7 @@ model ProjectAsset {
   projectId           String
   project             Project              @relation(fields: [projectId], references: [id])
   mintedProjectAssets MintedProjectAsset[]
+  createdAt           DateTime             @default(now())
 }
 
 model MintedProjectAsset {
@@ -49,4 +52,5 @@ model MintedProjectAsset {
   project        Project      @relation(fields: [projectId], references: [id])
   projectAssetId String
   projectAsset   ProjectAsset @relation(fields: [projectAssetId], references: [id])
+  createdAt      DateTime     @default(now())
 }
