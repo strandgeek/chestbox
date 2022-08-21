@@ -19,11 +19,12 @@ model Account {
 }
 
 model Project {
-  id      String         @id @default(uuid())
-  name    String
-  ownerId String
-  owner   Account        @relation(fields: [ownerId], references: [id])
-  assets  ProjectAsset[]
+  id       String         @id @default(uuid())
+  name     String
+  apiToken String         @unique
+  ownerId  String
+  owner    Account        @relation(fields: [ownerId], references: [id])
+  assets   ProjectAsset[]
 }
 
 model ProjectAsset {

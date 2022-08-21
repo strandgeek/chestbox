@@ -1,6 +1,7 @@
 import { Arg, Authorized, Ctx, Field, InputType, Mutation, Query, Resolver } from "type-graphql";
 import { Project } from '@generated/type-graphql'
 import { Context } from "../../types/context";
+import { generateRandomToken } from "../../src/utils/generateRandomToken";
 
 @InputType()
 export class ProjectCreateInput {
@@ -24,6 +25,7 @@ export class ProjectResolver {
       data: {
         name: input.name,
         ownerId: me.id,
+        apiToken: generateRandomToken(64)
       }
     })
     return project
