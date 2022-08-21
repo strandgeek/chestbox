@@ -43,6 +43,7 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
   };
   const assetsLink = `/app/projects/${params.projectId}`;
   const configLink = `/app/projects/${params.projectId}/configuration`;
+  const mintedAssetsLink = `/app/projects/${params.projectId}/minted-assets`;
   const links: NavigationLink[] = [
     {
       name: "Assets",
@@ -50,9 +51,9 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
       current: location.pathname === assetsLink,
     },
     {
-      name: "Minted Tokens",
-      to: `/app/projects/${params.projectId}/minted-tokens`,
-      current: false,
+      name: "Minted Assets",
+      to: mintedAssetsLink,
+      current: location.pathname === mintedAssetsLink,
     },
     {
       name: "Configuration",

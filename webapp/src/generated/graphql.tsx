@@ -13,6 +13,8 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
+  BigInt: any;
+  DateTime: any;
   JSON: any;
 };
 
@@ -20,6 +22,7 @@ export type Account = {
   __typename?: 'Account';
   _count?: Maybe<AccountCount>;
   address: Scalars['String'];
+  createdAt: Scalars['DateTime'];
   id: Scalars['String'];
   projects: Array<Project>;
 };
@@ -41,6 +44,7 @@ export type AccountCount = {
 
 export type AccountOrderByWithRelationInput = {
   address?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   projects?: InputMaybe<ProjectOrderByRelationAggregateInput>;
 };
@@ -55,6 +59,7 @@ export type AccountWhereInput = {
   NOT?: InputMaybe<Array<AccountWhereInput>>;
   OR?: InputMaybe<Array<AccountWhereInput>>;
   address?: InputMaybe<StringFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
   projects?: InputMaybe<ProjectListRelationFilter>;
 };
@@ -67,6 +72,28 @@ export type AuthInput = {
 export type AuthPayload = {
   __typename?: 'AuthPayload';
   token: Scalars['String'];
+};
+
+export type BigIntFilter = {
+  equals?: InputMaybe<Scalars['BigInt']>;
+  gt?: InputMaybe<Scalars['BigInt']>;
+  gte?: InputMaybe<Scalars['BigInt']>;
+  in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lt?: InputMaybe<Scalars['BigInt']>;
+  lte?: InputMaybe<Scalars['BigInt']>;
+  not?: InputMaybe<NestedBigIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['BigInt']>>;
+};
+
+export type DateTimeFilter = {
+  equals?: InputMaybe<Scalars['DateTime']>;
+  gt?: InputMaybe<Scalars['DateTime']>;
+  gte?: InputMaybe<Scalars['DateTime']>;
+  in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lt?: InputMaybe<Scalars['DateTime']>;
+  lte?: InputMaybe<Scalars['DateTime']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['DateTime']>>;
 };
 
 export type GenerateNonceInput = {
@@ -103,9 +130,81 @@ export type JsonFilter = {
   string_starts_with?: InputMaybe<Scalars['String']>;
 };
 
+export type MintedProjectAsset = {
+  __typename?: 'MintedProjectAsset';
+  assetID: Scalars['BigInt'];
+  createdAt: Scalars['DateTime'];
+  id: Scalars['String'];
+  project: Project;
+  projectAsset: ProjectAsset;
+  projectAssetId: Scalars['String'];
+  projectId: Scalars['String'];
+  to: Scalars['String'];
+  txnID: Scalars['String'];
+};
+
+export type MintedProjectAssetCreateInput = {
+  assetID: Scalars['Float'];
+  slug: Scalars['String'];
+  to: Scalars['String'];
+  txnID: Scalars['String'];
+};
+
+export type MintedProjectAssetListRelationFilter = {
+  every?: InputMaybe<MintedProjectAssetWhereInput>;
+  none?: InputMaybe<MintedProjectAssetWhereInput>;
+  some?: InputMaybe<MintedProjectAssetWhereInput>;
+};
+
+export type MintedProjectAssetOrderByRelationAggregateInput = {
+  _count?: InputMaybe<SortOrder>;
+};
+
+export type MintedProjectAssetOrderByWithRelationInput = {
+  assetID?: InputMaybe<SortOrder>;
+  createdAt?: InputMaybe<SortOrder>;
+  id?: InputMaybe<SortOrder>;
+  project?: InputMaybe<ProjectOrderByWithRelationInput>;
+  projectAsset?: InputMaybe<ProjectAssetOrderByWithRelationInput>;
+  projectAssetId?: InputMaybe<SortOrder>;
+  projectId?: InputMaybe<SortOrder>;
+  to?: InputMaybe<SortOrder>;
+  txnID?: InputMaybe<SortOrder>;
+};
+
+export enum MintedProjectAssetScalarFieldEnum {
+  AssetId = 'assetID',
+  CreatedAt = 'createdAt',
+  Id = 'id',
+  ProjectAssetId = 'projectAssetId',
+  ProjectId = 'projectId',
+  To = 'to',
+  TxnId = 'txnID'
+}
+
+export type MintedProjectAssetWhereInput = {
+  AND?: InputMaybe<Array<MintedProjectAssetWhereInput>>;
+  NOT?: InputMaybe<Array<MintedProjectAssetWhereInput>>;
+  OR?: InputMaybe<Array<MintedProjectAssetWhereInput>>;
+  assetID?: InputMaybe<BigIntFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
+  id?: InputMaybe<StringFilter>;
+  project?: InputMaybe<ProjectRelationFilter>;
+  projectAsset?: InputMaybe<ProjectAssetRelationFilter>;
+  projectAssetId?: InputMaybe<StringFilter>;
+  projectId?: InputMaybe<StringFilter>;
+  to?: InputMaybe<StringFilter>;
+  txnID?: InputMaybe<StringFilter>;
+};
+
+export type MintedProjectAssetWhereUniqueInput = {
+  id?: InputMaybe<Scalars['String']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   auth: AuthPayload;
+  createMintedProjectAssetByApiToken: MintedProjectAsset;
   createProject: Project;
   createProjectAsset: ProjectAsset;
   generateNonce: GenerateNoncePayload;
@@ -115,6 +214,12 @@ export type Mutation = {
 
 export type MutationAuthArgs = {
   input: AuthInput;
+};
+
+
+export type MutationCreateMintedProjectAssetByApiTokenArgs = {
+  apiToken: Scalars['String'];
+  input: MintedProjectAssetCreateInput;
 };
 
 
@@ -137,6 +242,28 @@ export type MutationUploadImageArgs = {
   input: ImageUploadInput;
 };
 
+export type NestedBigIntFilter = {
+  equals?: InputMaybe<Scalars['BigInt']>;
+  gt?: InputMaybe<Scalars['BigInt']>;
+  gte?: InputMaybe<Scalars['BigInt']>;
+  in?: InputMaybe<Array<Scalars['BigInt']>>;
+  lt?: InputMaybe<Scalars['BigInt']>;
+  lte?: InputMaybe<Scalars['BigInt']>;
+  not?: InputMaybe<NestedBigIntFilter>;
+  notIn?: InputMaybe<Array<Scalars['BigInt']>>;
+};
+
+export type NestedDateTimeFilter = {
+  equals?: InputMaybe<Scalars['DateTime']>;
+  gt?: InputMaybe<Scalars['DateTime']>;
+  gte?: InputMaybe<Scalars['DateTime']>;
+  in?: InputMaybe<Array<Scalars['DateTime']>>;
+  lt?: InputMaybe<Scalars['DateTime']>;
+  lte?: InputMaybe<Scalars['DateTime']>;
+  not?: InputMaybe<NestedDateTimeFilter>;
+  notIn?: InputMaybe<Array<Scalars['DateTime']>>;
+};
+
 export type NestedStringFilter = {
   contains?: InputMaybe<Scalars['String']>;
   endsWith?: InputMaybe<Scalars['String']>;
@@ -156,7 +283,9 @@ export type Project = {
   _count?: Maybe<ProjectCount>;
   apiToken: Scalars['String'];
   assets: Array<ProjectAsset>;
+  createdAt: Scalars['DateTime'];
   id: Scalars['String'];
+  mintedProjectAssets: Array<MintedProjectAsset>;
   name: Scalars['String'];
   owner: Account;
   ownerId: Scalars['String'];
@@ -172,8 +301,20 @@ export type ProjectAssetsArgs = {
   where?: InputMaybe<ProjectAssetWhereInput>;
 };
 
+
+export type ProjectMintedProjectAssetsArgs = {
+  cursor?: InputMaybe<MintedProjectAssetWhereUniqueInput>;
+  distinct?: InputMaybe<Array<MintedProjectAssetScalarFieldEnum>>;
+  orderBy?: InputMaybe<Array<MintedProjectAssetOrderByWithRelationInput>>;
+  skip?: InputMaybe<Scalars['Int']>;
+  take?: InputMaybe<Scalars['Int']>;
+  where?: InputMaybe<MintedProjectAssetWhereInput>;
+};
+
 export type ProjectAsset = {
   __typename?: 'ProjectAsset';
+  _count?: Maybe<ProjectAssetCount>;
+  createdAt: Scalars['DateTime'];
   description: Scalars['String'];
   id: Scalars['String'];
   imageUrl: Scalars['String'];
@@ -182,6 +323,11 @@ export type ProjectAsset = {
   projectId: Scalars['String'];
   properties: Scalars['JSON'];
   slug: Scalars['String'];
+};
+
+export type ProjectAssetCount = {
+  __typename?: 'ProjectAssetCount';
+  mintedProjectAssets: Scalars['Int'];
 };
 
 export type ProjectAssetCreateInput = {
@@ -204,9 +350,11 @@ export type ProjectAssetOrderByRelationAggregateInput = {
 };
 
 export type ProjectAssetOrderByWithRelationInput = {
+  createdAt?: InputMaybe<SortOrder>;
   description?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
   imageUrl?: InputMaybe<SortOrder>;
+  mintedProjectAssets?: InputMaybe<MintedProjectAssetOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
   project?: InputMaybe<ProjectOrderByWithRelationInput>;
   projectId?: InputMaybe<SortOrder>;
@@ -214,7 +362,13 @@ export type ProjectAssetOrderByWithRelationInput = {
   slug?: InputMaybe<SortOrder>;
 };
 
+export type ProjectAssetRelationFilter = {
+  is?: InputMaybe<ProjectAssetWhereInput>;
+  isNot?: InputMaybe<ProjectAssetWhereInput>;
+};
+
 export enum ProjectAssetScalarFieldEnum {
+  CreatedAt = 'createdAt',
   Description = 'description',
   Id = 'id',
   ImageUrl = 'imageUrl',
@@ -228,9 +382,11 @@ export type ProjectAssetWhereInput = {
   AND?: InputMaybe<Array<ProjectAssetWhereInput>>;
   NOT?: InputMaybe<Array<ProjectAssetWhereInput>>;
   OR?: InputMaybe<Array<ProjectAssetWhereInput>>;
+  createdAt?: InputMaybe<DateTimeFilter>;
   description?: InputMaybe<StringFilter>;
   id?: InputMaybe<StringFilter>;
   imageUrl?: InputMaybe<StringFilter>;
+  mintedProjectAssets?: InputMaybe<MintedProjectAssetListRelationFilter>;
   name?: InputMaybe<StringFilter>;
   project?: InputMaybe<ProjectRelationFilter>;
   projectId?: InputMaybe<StringFilter>;
@@ -245,6 +401,7 @@ export type ProjectAssetWhereUniqueInput = {
 export type ProjectCount = {
   __typename?: 'ProjectCount';
   assets: Scalars['Int'];
+  mintedProjectAssets: Scalars['Int'];
 };
 
 export type ProjectCreateInput = {
@@ -264,7 +421,9 @@ export type ProjectOrderByRelationAggregateInput = {
 export type ProjectOrderByWithRelationInput = {
   apiToken?: InputMaybe<SortOrder>;
   assets?: InputMaybe<ProjectAssetOrderByRelationAggregateInput>;
+  createdAt?: InputMaybe<SortOrder>;
   id?: InputMaybe<SortOrder>;
+  mintedProjectAssets?: InputMaybe<MintedProjectAssetOrderByRelationAggregateInput>;
   name?: InputMaybe<SortOrder>;
   owner?: InputMaybe<AccountOrderByWithRelationInput>;
   ownerId?: InputMaybe<SortOrder>;
@@ -277,6 +436,7 @@ export type ProjectRelationFilter = {
 
 export enum ProjectScalarFieldEnum {
   ApiToken = 'apiToken',
+  CreatedAt = 'createdAt',
   Id = 'id',
   Name = 'name',
   OwnerId = 'ownerId'
@@ -288,7 +448,9 @@ export type ProjectWhereInput = {
   OR?: InputMaybe<Array<ProjectWhereInput>>;
   apiToken?: InputMaybe<StringFilter>;
   assets?: InputMaybe<ProjectAssetListRelationFilter>;
+  createdAt?: InputMaybe<DateTimeFilter>;
   id?: InputMaybe<StringFilter>;
+  mintedProjectAssets?: InputMaybe<MintedProjectAssetListRelationFilter>;
   name?: InputMaybe<StringFilter>;
   owner?: InputMaybe<AccountRelationFilter>;
   ownerId?: InputMaybe<StringFilter>;
@@ -303,6 +465,7 @@ export type Query = {
   __typename?: 'Query';
   assetInfoByApiToken: ProjectAsset;
   me?: Maybe<Account>;
+  mintedAssetInfoByApiToken: MintedProjectAsset;
   project?: Maybe<Project>;
 };
 
@@ -310,6 +473,12 @@ export type Query = {
 export type QueryAssetInfoByApiTokenArgs = {
   apiToken: Scalars['String'];
   slug: Scalars['String'];
+};
+
+
+export type QueryMintedAssetInfoByApiTokenArgs = {
+  apiToken: Scalars['String'];
+  assetID: Scalars['Float'];
 };
 
 
@@ -395,6 +564,14 @@ export type ProjectConfigQueryVariables = Exact<{
 
 
 export type ProjectConfigQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, name: string, apiToken: string } | null };
+
+export type ProjectMintedAssetsQueryVariables = Exact<{
+  projectId: Scalars['String'];
+  orderBy?: InputMaybe<Array<MintedProjectAssetOrderByWithRelationInput> | MintedProjectAssetOrderByWithRelationInput>;
+}>;
+
+
+export type ProjectMintedAssetsQuery = { __typename?: 'Query', project?: { __typename?: 'Project', id: string, mintedProjectAssets: Array<{ __typename?: 'MintedProjectAsset', id: string, assetID: any, txnID: string, createdAt: any, projectAsset: { __typename?: 'ProjectAsset', name: string, slug: string, imageUrl: string } }> } | null };
 
 
 export const AuthDocument = gql`
@@ -686,6 +863,53 @@ export function useProjectConfigLazyQuery(baseOptions?: Apollo.LazyQueryHookOpti
 export type ProjectConfigQueryHookResult = ReturnType<typeof useProjectConfigQuery>;
 export type ProjectConfigLazyQueryHookResult = ReturnType<typeof useProjectConfigLazyQuery>;
 export type ProjectConfigQueryResult = Apollo.QueryResult<ProjectConfigQuery, ProjectConfigQueryVariables>;
+export const ProjectMintedAssetsDocument = gql`
+    query ProjectMintedAssets($projectId: String!, $orderBy: [MintedProjectAssetOrderByWithRelationInput!]) {
+  project(id: $projectId) {
+    id
+    mintedProjectAssets(orderBy: $orderBy) {
+      id
+      assetID
+      txnID
+      createdAt
+      projectAsset {
+        name
+        slug
+        imageUrl
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useProjectMintedAssetsQuery__
+ *
+ * To run a query within a React component, call `useProjectMintedAssetsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useProjectMintedAssetsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useProjectMintedAssetsQuery({
+ *   variables: {
+ *      projectId: // value for 'projectId'
+ *      orderBy: // value for 'orderBy'
+ *   },
+ * });
+ */
+export function useProjectMintedAssetsQuery(baseOptions: Apollo.QueryHookOptions<ProjectMintedAssetsQuery, ProjectMintedAssetsQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<ProjectMintedAssetsQuery, ProjectMintedAssetsQueryVariables>(ProjectMintedAssetsDocument, options);
+      }
+export function useProjectMintedAssetsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ProjectMintedAssetsQuery, ProjectMintedAssetsQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<ProjectMintedAssetsQuery, ProjectMintedAssetsQueryVariables>(ProjectMintedAssetsDocument, options);
+        }
+export type ProjectMintedAssetsQueryHookResult = ReturnType<typeof useProjectMintedAssetsQuery>;
+export type ProjectMintedAssetsLazyQueryHookResult = ReturnType<typeof useProjectMintedAssetsLazyQuery>;
+export type ProjectMintedAssetsQueryResult = Apollo.QueryResult<ProjectMintedAssetsQuery, ProjectMintedAssetsQueryVariables>;
 
       export interface PossibleTypesResultData {
         possibleTypes: {

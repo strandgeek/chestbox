@@ -1,0 +1,16 @@
+query ProjectMintedAssets($projectId: String!, $orderBy: [MintedProjectAssetOrderByWithRelationInput!]) {
+  project(id: $projectId) {
+    id
+    mintedProjectAssets(orderBy: $orderBy) {
+      id
+      assetID
+      txnID
+      createdAt
+      projectAsset {
+        name
+        slug
+        imageUrl
+      }
+    }
+  }
+}

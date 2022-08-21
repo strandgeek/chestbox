@@ -18,7 +18,7 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
   })
   useEffect(() => {
     if (projectData?.project?.assets?.length) {
-      setCurrentAssetPreview(projectData?.project?.assets[0])
+      setCurrentAssetPreview(projectData?.project?.assets[0] as any)
     }
   }, [projectData])
   const project = projectData?.project || { assets: []} 
@@ -49,7 +49,7 @@ export const ProjectViewPage: FC<ProjectViewPageProps> = (props) => {
                   console.log(currentAssetPreview?.slug === a.slug)
                   return (
                     <div className="flex items-center justify-center">
-                      <button className={className} onClick={() => setCurrentAssetPreview(a)}>
+                      <button className={className} onClick={() => setCurrentAssetPreview(a as any)}>
                         <img src={a.imageUrl} className="w-full h-full" />
                       </button>
                     </div>
