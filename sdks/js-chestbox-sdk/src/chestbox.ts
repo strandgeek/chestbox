@@ -204,7 +204,6 @@ export class ChestBoxSDK {
    */
   async completeClaimAsset({ assetID }: { assetID: number }): Promise<{ txnID: string }> {
     const mintedAsset = await this.getMintedAsset(assetID)
-    console.log(`Transfering assetID=${assetID} to address=${mintedAsset.to}...`)
     const params = await this.algodClient.getTransactionParams().do();
     const txn = algosdk.makeAssetTransferTxnWithSuggestedParamsFromObject({
       from: this.minterAccount.addr,
