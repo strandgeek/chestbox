@@ -1,96 +1,87 @@
-[![ci](https://github.com/strandgeek/web3-boilerplate/actions/workflows/build.yml/badge.svg)](https://github.com/strandgeek/web3-boilerplate/actions/workflows/build.yml) ![GitHub](https://img.shields.io/github/license/strandgeek/web3-boilerplate) ![GitHub issues](https://img.shields.io/github/issues/strandgeek/web3-boilerplate) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/web3-boilerplate)
+![GitHub](https://img.shields.io/github/license/strandgeek/chestbox) ![GitHub issues](https://img.shields.io/github/issues/strandgeek/chestbox) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/chestbox)
 
-# MyProjectName
-
-## Table of Contents
-1. [About](#about)
-2. [Quick Links](#quick-links)
-3. [Stack](#stack)
-4. [Running in Production](#running-in-production)
-5. [Development](#development)
-
+# ChestBox
 
 --------
 
 ## Quick Links
-- [📹 Video Presentation](https://TODO)
-- [📕 Techinical Overview](https://TODO)
-- [📄 Smart Contract](https://TODO)
+- [📹 Video Presentation](https://www.youtube.com/watch?v=OmNInFomYCE)
+- [📕 Pitch Deck](https://drive.google.com/file/d/1vr0QT6FYsGOv1YaIOY6d-YWmxAO3dneU/view?usp=sharing)
+- [⚡️ ChestBox Platform](https://chestbox.io/)
+- [👾 ChestBox Live Game Demo](https://demo.chestbox.io/)
+
+--------
+
+## Table of Contents
+1. [About](#about)
+2. [Setup](#setup)
+
+
 --------
 
 ## About
 
-Donec sollicitudin molestie malesuada. Praesent sapien massa, convallis a pellentesque nec, egestas non nisi. Vivamus suscipit tortor eget felis porttitor volutpat. Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem. Sed porttitor lectus nibh. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
+ChestBox is an out-of-the-box solution for Game Designers that makes easy the creation and management of game assets on the Algorand Blockchain.
 
-Donec rutrum congue leo eget malesuada. Curabitur aliquet quam id dui posuere blandit. Pellentesque in ipsum id orci porta dapibus. Donec sollicitudin molestie malesuada. Donec rutrum congue leo eget malesuada. Vestibulum ac diam sit amet quam vehicula elementum sed sit amet dui.
-
-
-## Stack
-
-- api: NodeJS + Typescript + ExpressJS
-- webapp: ReactJS + Typescript
-
-TODO: Add more info about stack
+It is a tool designed for those who want to create an RPG game, card game, or any game in which the player has ownership of an asset.
 
 
-## Running in Production
+## Setup
 
-### Option 1 - Docker (Recommended)
-
-You can run this application using docker:
-
-```
-docker run -p 4000:4000 strandgeek/web3-app:latest
-```
-
-
-### Option 2 - Build the project
+To setup the project environment, follow these steps:
 
 1 - Clone this repository
 
-2 - Go to the webapp and build it:
+2 - Go to the api and install dependencies
 
 ```
-cd webapp
-npm install
-npm run build
+cd api
+npm i
 ```
 
-3 - Go to the api and build it:
-```
-cd ../api
-npm install
-npm run build
-```
+3 - Create `.env` file for the API.
 
-4 - Run the API
-```
-npm start
-```
-
-The server should listen on port 4000 and it already serves the webapp static build.
-
-
-## Development
-
-To setup the development environment, follow these steps:
-
-1 - Clone this repository
-
-2 - Go to the webapp and start it:
+Example:
 
 ```
-cd webapp
-npm install
-npm start
+DATABASE_URL="postgresql://postgres:postgres@localhost:55432/chestbox?schema=public"
+APP_BASE_URL=https://chestbox.io
+
+PURESTAKE_SERVER=
+PURESTAKE_TOKEN=
+
+JWT_SECRET=my-super-secret
+
+AWS_S3_REGION=us-east-1
+AWS_S3_BUCKET=your-s3-bucket
+AWS_KEY_ID=
+AWS_ACCESS_KEY=
 ```
 
-2 - In another terminal, go to the api and start it
+5 - Push db tables using prisma:
 
 ```
-cd ../api
-npm install
+npx prisma db push
+```
+
+4 - Start the API:
+
+```
 npm run dev
 ```
 
-The application should run on http://localhost:4000. The api will serve the webapp as proxy
+5 - Go to the webapp in another terminal and install dependencies:
+
+```
+cd webapp
+npm i
+```
+
+
+6 - Start the webapp:
+
+```
+npm run start
+```
+
+The application should be running on http://localhost:3000
