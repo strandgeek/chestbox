@@ -1,6 +1,6 @@
 {
   "name": "@strandgeek/chestbox-sdk",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "A ChestBox SDK for NodeJS Game Servers",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",

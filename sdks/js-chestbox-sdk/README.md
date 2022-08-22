@@ -43,6 +43,6 @@ After the player opt-in step, you can complete the claim (transfer the token fro
 
 ```typescript
 const result = await chestbox.completeClaimAsset({
-  assetID: data.assetID,
+  assetID,
 })
 ```
