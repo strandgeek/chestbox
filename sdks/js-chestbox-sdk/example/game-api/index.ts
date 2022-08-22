@@ -4,7 +4,7 @@ import algosdk from 'algosdk'
 import express, {Request, Response, Router } from 'express'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-import { ChestBoxSDK } from '../../dist'
+import { ChestBoxSDK } from '@strandgeek/chestbox-sdk'
 import { algodClient } from './utils/algod'
 
 
