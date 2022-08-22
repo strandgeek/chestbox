@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/strandgeek/chestbox) ![GitHub issues](https://img.shields.io/github/issues/strandgeek/chestbox) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/chestbox)
+![GitHub](https://img.shields.io/github/license/strandgeek/chestbox) ![GitHub issues](https://img.shields.io/github/issues/strandgeek/chestbox) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/chestbox) [![npm version](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk.svg)](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk)
 
 # ChestBox
 
@@ -25,6 +25,7 @@ ChestBox is an out-of-the-box solution for Game Designers that makes easy the cr
 
 It is a tool designed for those who want to create an RPG game, card game, or any game in which the player has ownership of an asset.
 
+![App Screenshot](docs/app-screenshot.png)
 
 ## Setup
 
