@@ -1,5 +1,7 @@
+import 'react-toastify/dist/ReactToastify.css';
 import { ApolloProvider } from "@apollo/client";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { client } from "./client";
 import { CreateAssetPage } from "./pages/CreateAssetPage";
 import { CreateProjectPage } from "./pages/CreateProjectPage";
@@ -12,6 +14,7 @@ import { ProjectViewPage } from "./pages/ProjectViewPage";
 function App() {
   return (
     <ApolloProvider client={client}>
+      <ToastContainer />
       <BrowserRouter>
       <Routes>
         <Route path="/" element={<HomePage />} />

@@ -22,6 +22,7 @@ import {
 import { useApolloClient } from "@apollo/client";
 
 export interface TopbarProps {
+  noProjectLinks?: boolean;
   me?: Partial<Account>;
 }
 
@@ -31,7 +32,7 @@ interface NavigationLink {
   current: boolean;
 }
 
-export const Topbar: FC<TopbarProps> = ({ me }) => {
+export const Topbar: FC<TopbarProps> = ({ me, noProjectLinks = false }) => {
   const params = useParams();
   const location = useLocation();
   const client = useApolloClient();
@@ -44,23 +45,25 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
   const assetsLink = `/app/projects/${params.projectId}`;
   const configLink = `/app/projects/${params.projectId}/configuration`;
   const mintedAssetsLink = `/app/projects/${params.projectId}/minted-assets`;
-  const links: NavigationLink[] = [
-    {
-      name: "Assets",
-      to: `/app/projects/${params.projectId}`,
-      current: location.pathname === assetsLink,
-    },
-    {
-      name: "Minted Assets",
-      to: mintedAssetsLink,
-      current: location.pathname === mintedAssetsLink,
-    },
-    {
-      name: "Configuration",
-      to: configLink,
-      current: location.pathname === configLink,
-    },
-  ];
+  const links: NavigationLink[] = noProjectLinks
+    ? []
+    : [
+        {
+          name: "Assets",
+          to: `/app/projects/${params.projectId}`,
+          current: location.pathname === assetsLink,
+        },
+        {
+          name: "Minted Assets",
+          to: mintedAssetsLink,
+          current: location.pathname === mintedAssetsLink,
+        },
+        {
+          name: "Configuration",
+          to: configLink,
+          current: location.pathname === configLink,
+        },
+      ];
   const currentProject = me?.projects?.find((p) => p.id === params.projectId);
   const renderUserInfo = () => {
     const accountAddress = me?.address;
@@ -117,27 +120,28 @@ export const Topbar: FC<TopbarProps> = ({ me }) => {
                 </Disclosure.Button>
               </div>
               <div className="flex-1">
-                <a className="btn btn-ghost normal-case text-xl">
+                <Link className="btn btn-ghost normal-case text-xl" to="/">
                   <img src="/chestbox-logo.png" className="h-6" />
-                </a>
+                </Link>
               </div>
             </div>
-            <div className="navbar-center hidden lg:flex">
-              <div className="tabs tabs-boxed">
-                {links.map((link) => (
-                  <Link
-                    to={link.to}
-                    className={classNames(
-                      link.current
-                        ? "tab-active": "",
-                      "tab"
-                    )}
-                  >
-                    {link.name}
-                  </Link>
-                ))}
+            {!noProjectLinks && (
+              <div className="navbar-center hidden lg:flex">
+                <div className="tabs tabs-boxed">
+                  {links.map((link) => (
+                    <Link
+                      to={link.to}
+                      className={classNames(
+                        link.current ? "tab-active" : "",
+                        "tab"
+                      )}
+                    >
+                      {link.name}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
+            )}
             <div className="navbar-end">
               <div className="flex-none">{renderUserInfo()}</div>
             </div>

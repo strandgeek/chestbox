@@ -4,10 +4,11 @@ import { Topbar } from '../components/Topbar'
 import { useMeQuery } from '../generated/graphql'
 
 export interface AppLayoutProps {
+  noProjectLinks?: boolean;
   children: React.ReactNode
 }
 
-export const AppLayout: FC<AppLayoutProps> = (props) => {
+export const AppLayout: FC<AppLayoutProps> = ({ noProjectLinks, children}) => {
   const navigate = useNavigate()
   const { data: meData, loading, client } = useMeQuery()
   useEffect(() => {
@@ -22,9 +23,9 @@ export const AppLayout: FC<AppLayoutProps> = (props) => {
   }
   return (
     <div>
-      <Topbar me={me as any} />
+      <Topbar me={me as any} noProjectLinks={noProjectLinks} />
       <div>
-        {props.children}
+        {children}
       </div>
     </div>
   )

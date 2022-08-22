@@ -15,7 +15,7 @@ export const ProjectsPage: FC<ProjectsPageProps> = (props) => {
   }, [meData])
   const me = meData?.me;
   return (
-    <AppLayout>
+    <AppLayout noProjectLinks>
       <div className="mx-auto max-w-xl mt-12">
         <div className="p-4">
           <div className="font-bold p-2 pb-4">Select a Project</div>
