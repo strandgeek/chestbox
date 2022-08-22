@@ -11,7 +11,7 @@ import { algoClient } from "./algo";
 import algosdk from "algosdk";
 import { confettiAnimate } from "./utils/confettiAnimate";
 
-const PRIZE_ASSET_SLUG = "super-sword";
+const PRIZE_ASSET_SLUG = "ahlspiess";
 
 function App() {
   const { connect, address } = useWallet();
