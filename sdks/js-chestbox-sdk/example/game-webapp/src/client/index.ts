@@ -1,5 +1,5 @@
 import axios from 'axios'
 
 export const client = axios.create({
-  baseURL: 'http://localhost:9090/api',
+  baseURL: process.env.REACT_APP_API_URL || 'http://localhost:9090/api',
 })
