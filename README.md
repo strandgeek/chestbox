@@ -1,4 +1,4 @@
-![GitHub](https://img.shields.io/github/license/strandgeek/chestbox) ![GitHub issues](https://img.shields.io/github/issues/strandgeek/chestbox) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/chestbox) [![npm version](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk.svg)](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk)
+![GitHub issues](https://img.shields.io/github/issues/strandgeek/chestbox) ![GitHub last commit](https://img.shields.io/github/last-commit/strandgeek/chestbox) [![npm version](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk.svg)](https://badge.fury.io/js/@strandgeek%2Fchestbox-sdk)
 
 # ChestBox
 
